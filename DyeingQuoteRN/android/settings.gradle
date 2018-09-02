@@ -1,0 +1,3 @@
+rootProject.name = 'DyeingQuoteRN'
+
+include ':app'
