@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "antd-mobile-rn": "^2.2.1",
+    "mobx": "^5.1.0",
+    "mobx-react": "^5.2.6",
     "react": "16.4.1",
     "react-native": "0.56.0"
   },
