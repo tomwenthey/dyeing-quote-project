@@ -1,15 +1,23 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { observer, inject } from "mobx-react";
 
-export default class Header extends Component {
-  render() {
-    return (
-      <View style={styles.header}>
-        <Text style={styles.title}>首页</Text>
-      </View>
-    );
-  }
-}
+import { TITLE } from "../../constants";
+
+const Header = inject("store")(
+  observer(
+    class Header extends Component {
+      render() {
+        const { store } = this.props;
+        return (
+          <View style={styles.header}>
+            <Text style={styles.title}>{TITLE[store.nowTab]}</Text>
+          </View>
+        );
+      }
+    }
+  )
+);
 
 const styles = StyleSheet.create({
   header: {
@@ -25,3 +33,5 @@ const styles = StyleSheet.create({
     color: "#FFFFFF"
   }
 });
+
+export default Header;

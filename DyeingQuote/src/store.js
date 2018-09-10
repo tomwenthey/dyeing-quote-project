@@ -3,6 +3,8 @@ import { observable, action, decorate } from "mobx";
 class Store {
   nowTab = 0;
 
+  news = [];
+
   changeTab(newTab) {
     this.nowTab = newTab;
   }
@@ -10,6 +12,7 @@ class Store {
 
 decorate(Store, {
   nowTab: observable,
+  news: observable,
   changeTab: action
 });
 

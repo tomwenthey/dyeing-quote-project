@@ -1,26 +1,17 @@
 import React from "react";
 import { observer, inject } from "mobx-react";
-import { View, Text } from "react-native";
 import { TabBar } from "antd-mobile-rn";
 
-import { TabOneScreenOne } from "./TabOne/views";
+import HomeScreen from "./Home/HomeScreen";
+import NewsScreen from "./News/NewsScreen";
+import QuoteScreen from "./Quote/QuoteScreen";
+import MineScreen from "./Mine/MineScreen";
 
 const TabBarNavigation = inject("store")(
   observer(
     class TabBarNavigation extends React.Component {
-      renderContent(pageText) {
-        return (
-          <View
-            style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}
-          >
-            <Text style={{ margin: 50 }}>{pageText}</Text>
-          </View>
-        );
-      }
-
       render() {
         const { store } = this.props;
-        console.log(this.props);
         return (
           <TabBar
             unselectedTintColor="#949494"
@@ -34,7 +25,7 @@ const TabBarNavigation = inject("store")(
               selected={store.nowTab === 0}
               onPress={() => store.changeTab(0)}
             >
-              <TabOneScreenOne />
+              <HomeScreen />
             </TabBar.Item>
             <TabBar.Item
               icon={require("./img/read.png")}
@@ -43,7 +34,7 @@ const TabBarNavigation = inject("store")(
               selected={store.nowTab === 1}
               onPress={() => store.changeTab(1)}
             >
-              {this.renderContent("资讯")}
+              <NewsScreen />
             </TabBar.Item>
             <TabBar.Item
               icon={require("./img/YUAN.png")}
@@ -52,7 +43,7 @@ const TabBarNavigation = inject("store")(
               selected={store.nowTab === 2}
               onPress={() => store.changeTab(2)}
             >
-              {this.renderContent("报价")}
+              <QuoteScreen />
             </TabBar.Item>
             <TabBar.Item
               icon={require("./img/user.png")}
@@ -61,7 +52,7 @@ const TabBarNavigation = inject("store")(
               selected={store.nowTab === 3}
               onPress={() => store.changeTab(3)}
             >
-              {this.renderContent("我的")}
+              <MineScreen />
             </TabBar.Item>
           </TabBar>
         );
