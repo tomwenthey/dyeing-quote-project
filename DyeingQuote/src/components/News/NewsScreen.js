@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Carousel } from "antd-mobile-rn";
 
-import ArticleItem from "../common/ArticleItem";
+import ArticleItem from "./ArticleItem";
 
 export default class NewsScreen extends Component {
   render() {

@@ -9,10 +9,30 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Provider } from "mobx-react";
+import { createStackNavigator } from "react-navigation";
+import { StatusBar } from "react-native";
 
 import TabBar from "./components/TabBarNavigation";
-import Header from "./components/common/Header";
+import LoginScreen from "./components/Mine/LoginScreen";
+import RegScreen from "./components/Mine/RegScreen";
 import Store from "./store";
+
+const Navigator = createStackNavigator(
+  {
+    Main: { screen: TabBar },
+    Login: { screen: LoginScreen },
+    Reg: { screen: RegScreen }
+  },
+
+  {
+    navigationOptions: {
+      // 开启动画
+      animationEnabled: true,
+      // 开启边缘触摸返回
+      gesturesEnabled: true
+    }
+  }
+);
 
 export default class App extends Component {
   render() {
@@ -20,8 +40,8 @@ export default class App extends Component {
     return (
       <Provider store={store}>
         <View style={styles.container}>
-          <Header />
-          <TabBar />
+          <StatusBar barStyle="light-content" />
+          <Navigator />
         </View>
       </Provider>
     );

@@ -5,6 +5,8 @@ class Store {
 
   news = [];
 
+  isLogin = false;
+
   changeTab(newTab) {
     this.nowTab = newTab;
   }

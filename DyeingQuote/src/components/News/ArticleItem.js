@@ -36,13 +36,14 @@ const styles = StyleSheet.create({
     lineHeight: 20
   },
   articleInfo: {
-    flexDirection: "row",
-    justifyContent: "space-between"
+    flexDirection: "row"
+    // justifyContent: "space-between"
   },
   articleTime: {
     fontSize: 14,
     color: "#777777",
-    lineHeight: 28
+    lineHeight: 28,
+    marginLeft: 12
   },
   articleType: {
     backgroundColor: "#3572A5",
