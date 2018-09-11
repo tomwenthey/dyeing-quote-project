@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const argon2 = require("argon2");
+var SHA256 = require("crypto-js/sha256");
 
 const Schema = mongoose.Schema;
 
@@ -8,26 +8,17 @@ const UserSchema = new Schema({
   password: String,
   name: String,
   phone: String,
-  email: String
+  email: String,
+  introduce: String
 });
 
 UserSchema.pre("save", function(next) {
-  argon2
-    .hash(this.password)
-    .then(hash => {
-      this.password = hash;
-      next();
-    })
-    .catch(err => {
-      next(err);
-    });
+  this.password = SHA256(this.password);
+  next();
 });
 
 UserSchema.methods.comparePassword = function(candidatePassword) {
-  return argon2
-    .verify(this.password, candidatePassword)
-    .then(match => Promise.resolve(match))
-    .catch(err => Promise.reject(err));
+  return this.password === SHA256(candidatePassword).toString();
 };
 
 module.exports = mongoose.model("User", UserSchema);

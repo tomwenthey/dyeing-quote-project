@@ -13,25 +13,17 @@ const userLogin = (req, res) => {
         res.json(rs);
       }
       if (user) {
-        user
-          .comparePassword(password)
-          .then(match => {
-            if (match) {
-              rs.status = 1;
-              rs.message = "登录成功";
-            } else {
-              rs.message = "用户名或密码错误";
-            }
-            res.json(rs);
-          })
-          .catch(err => {
-            rs.message = err.message;
-            res.json(rs);
-          });
+        if (user.comparePassword(password)) {
+          rs.status = 1;
+          rs.user = user;
+          rs.message = "登录成功";
+        } else {
+          rs.message = "用户名或密码错误";
+        }
       } else {
         rs.message = "用户名不存在";
-        res.json(rs);
       }
+      res.json(rs);
     });
   }
 };
@@ -84,13 +76,18 @@ const updateUser = (req, res) => {
 
 const createUser = (req, res) => {
   const UserEntity = new UserModel(req.body);
+  UserModel.findOne({ username: req.body.username }, (err, row) => {
+    if (row) {
+      res.json({ status: 0, message: "用户名已存在" });
+    } else {
+      UserEntity.save(err => {
+        if (err) {
+          res.json({ status: 0, message: err.message });
+        }
 
-  UserEntity.save(err => {
-    if (err) {
-      res.json({ status: 0, message: err.message });
+        res.json({ status: 1, message: "注册成功" });
+      });
     }
-
-    res.json({ status: 1, message: "注册成功" });
   });
 };
 

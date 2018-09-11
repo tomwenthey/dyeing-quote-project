@@ -9,23 +9,26 @@ import {
 } from "react-native";
 import { observer, inject } from "mobx-react";
 
-const MineScreen = inject("store")(
+const MineScreen = inject("userStore")(
   observer(
     class MineScreen extends Component {
       render() {
-        const { store, navigation } = this.props;
-
+        const { userStore, navigation } = this.props;
         return (
           <View style={styles.mineScreen}>
-            {store.isLogin ? (
+            {userStore.loginSuccess ? (
               <View style={styles.personInfo}>
                 <Image
                   source={require("./img/avatar.jpg")}
                   style={styles.userAvatar}
                 />
                 <View>
-                  <Text style={styles.userName}>Tom went hey</Text>
-                  <Text style={styles.introduce}>暂无个人简介</Text>
+                  <Text style={styles.userName}>{userStore.user.username}</Text>
+                  <Text style={styles.introduce}>
+                    {userStore.user.introduce
+                      ? userStore.user.introduce
+                      : "暂无个人简介"}
+                  </Text>
                 </View>
               </View>
             ) : (

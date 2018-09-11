@@ -15,7 +15,7 @@ import { StatusBar } from "react-native";
 import TabBar from "./components/TabBarNavigation";
 import LoginScreen from "./components/Mine/LoginScreen";
 import RegScreen from "./components/Mine/RegScreen";
-import Store from "./store";
+import stores from "./stores";
 
 const Navigator = createStackNavigator(
   {
@@ -36,9 +36,8 @@ const Navigator = createStackNavigator(
 
 export default class App extends Component {
   render() {
-    const store = new Store();
     return (
-      <Provider store={store}>
+      <Provider {...stores}>
         <View style={styles.container}>
           <StatusBar barStyle="light-content" />
           <Navigator />

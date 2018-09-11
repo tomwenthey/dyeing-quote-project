@@ -1,21 +1,16 @@
 import { observable, action, decorate } from "mobx";
 
-class Store {
+class globalStore {
   nowTab = 0;
-
-  news = [];
-
-  isLogin = false;
 
   changeTab(newTab) {
     this.nowTab = newTab;
   }
 }
 
-decorate(Store, {
+decorate(globalStore, {
   nowTab: observable,
-  news: observable,
   changeTab: action
 });
 
-export default Store;
+export default new globalStore();
