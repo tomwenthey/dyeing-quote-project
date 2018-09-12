@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
 import {
   Button,
   InputItem,
@@ -13,19 +13,19 @@ import { autorun } from "mobx";
 
 import { FETCHING_STATE } from "../../constants";
 
-const LoginScreen = inject("userStore")(
+const ChangePassword = inject("userStore")(
   observer(
-    class LoginScreen extends Component {
+    class ChangePassword extends Component {
       constructor(props) {
         super(props);
         this.state = {
-          username: "",
-          password: ""
+          oldPassword: "",
+          newPassword: ""
         };
       }
 
       static navigationOptions = {
-        title: "登录",
+        title: "",
         headerStyle: {
           backgroundColor: "#D13F50"
         },
@@ -36,46 +36,47 @@ const LoginScreen = inject("userStore")(
       };
 
       handleSubmit = () => {
-        this.props.userStore.fetch(this.state, "login");
+        this.props.userStore.fetch(this.state, "changePassword");
         this.props.userStore.clearState();
       };
 
       handleConfirm = () => {
-        if (this.state.username && this.state.password) {
+        if (this.state.oldPassword && this.state.newPassword) {
           this.handleSubmit();
         } else {
-          Toast.fail("用户名或密码不能为空", 1);
+          Toast.fail("原密码或新密码不能为空", 1);
         }
       };
 
       componentDidMount = () => {
         autorun(() => {
-          const fetchState = this.props.userStore.fetchState;
-          const message = this.props.userStore.alertMessage;
-          if (fetchState === FETCHING_STATE.SUCCESS) {
-            Toast.success(message, 1);
-            this.props.navigation.navigate("Main");
-          } else if (message) {
-            Toast.fail(message, 1);
+          if (this.props.userStore.fetchState === FETCHING_STATE.DONE) {
+            if (this.props.userStore.fetchSuccess) {
+              Toast.success(this.props.userStore.alertMessage, 1);
+              this.props.navigation.navigate("Main");
+            } else if (this.props.userStore.alertMessage) {
+              Toast.fail(this.props.userStore.alertMessage, 1);
+            }
+          } else if (this.props.userStore.loginState === FETCHING_STATE.ERROR) {
+            Toast.fail(this.props.userStore.alertMessage, 1);
           }
         });
       };
 
       render() {
-        const { navigation } = this.props;
         return (
-          <View style={styles.loginScreen}>
-            <List renderHeader={() => "账号信息"}>
+          <View style={{ flex: 1 }}>
+            <List renderHeader={() => "修改密码"}>
               <InputItem
                 clear
-                type="text"
-                value={this.state.username}
+                type="password"
+                value={this.state.oldPassword}
                 onChange={value => {
                   this.setState({
-                    username: value
+                    oldPassword: value
                   });
                 }}
-                placeholder="请输入用户名"
+                placeholder="请输入原密码"
                 labelNumber={2}
                 style={styles.inputItem}
               >
@@ -87,13 +88,13 @@ const LoginScreen = inject("userStore")(
               <InputItem
                 clear
                 type="password"
-                value={this.state.password}
+                value={this.state.newPassword}
                 onChange={value => {
                   this.setState({
-                    password: value
+                    newPassword: value
                   });
                 }}
-                placeholder="请输入密码"
+                placeholder="请输入新密码"
                 labelNumber={2}
                 style={styles.inputItem}
               >
@@ -106,17 +107,8 @@ const LoginScreen = inject("userStore")(
             <WingBlank>
               <WhiteSpace size="lg" />
               <Button type="warning" onPressIn={this.handleConfirm}>
-                登录
+                确认修改
               </Button>
-              <WhiteSpace size="lg" />
-              <View style={styles.toReg}>
-                <Text
-                  style={styles.toRegText}
-                  onPress={() => navigation.navigate("Reg")}
-                >
-                  立即注册
-                </Text>
-              </View>
             </WingBlank>
           </View>
         );
@@ -126,20 +118,10 @@ const LoginScreen = inject("userStore")(
 );
 
 const styles = StyleSheet.create({
-  loginScreen: {
-    flex: 1
-  },
-  toReg: {
-    alignItems: "flex-end"
-  },
-  toRegText: {
-    color: "#777777",
-    fontSize: 16
-  },
   inputItem: {
     height: 52,
     lineHeight: 48
   }
 });
 
-export default LoginScreen;
+export default ChangePassword;

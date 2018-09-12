@@ -15,13 +15,15 @@ import { StatusBar } from "react-native";
 import TabBar from "./components/TabBarNavigation";
 import LoginScreen from "./components/Mine/LoginScreen";
 import RegScreen from "./components/Mine/RegScreen";
+import ChangePassword from "./components/Mine/ChangePassword";
 import stores from "./stores";
 
 const Navigator = createStackNavigator(
   {
     Main: { screen: TabBar },
     Login: { screen: LoginScreen },
-    Reg: { screen: RegScreen }
+    Reg: { screen: RegScreen },
+    ChangePassword: { screen: ChangePassword }
   },
 
   {

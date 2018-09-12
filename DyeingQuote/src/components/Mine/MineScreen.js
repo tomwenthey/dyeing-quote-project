@@ -1,35 +1,64 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  AsyncStorage
-} from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { List, WhiteSpace, Toast } from "antd-mobile-rn";
 import { observer, inject } from "mobx-react";
+
+import { FETCHING_STATE } from "../../constants";
+
+const Item = List.Item;
 
 const MineScreen = inject("userStore")(
   observer(
     class MineScreen extends Component {
+      handleLogout = () => {
+        this.props.userStore.logout();
+        Toast.success("注销成功", 1);
+      };
+
       render() {
         const { userStore, navigation } = this.props;
         return (
           <View style={styles.mineScreen}>
-            {userStore.loginSuccess ? (
-              <View style={styles.personInfo}>
-                <Image
-                  source={require("./img/avatar.jpg")}
-                  style={styles.userAvatar}
-                />
-                <View>
-                  <Text style={styles.userName}>{userStore.user.username}</Text>
-                  <Text style={styles.introduce}>
-                    {userStore.user.introduce
-                      ? userStore.user.introduce
-                      : "暂无个人简介"}
-                  </Text>
+            {userStore.fetchState === FETCHING_STATE.SUCCESS ? (
+              <View>
+                <View style={styles.personInfo}>
+                  <Image
+                    source={require("./img/avatar.jpg")}
+                    style={styles.userAvatar}
+                  />
+                  <View>
+                    <Text style={styles.userName}>
+                      {userStore.user.username}
+                    </Text>
+                    <Text style={styles.introduce}>
+                      {userStore.user.introduce
+                        ? userStore.user.introduce
+                        : "暂无个人简介"}
+                    </Text>
+                  </View>
                 </View>
+                <WhiteSpace size="lg" />
+                <List>
+                  <Item
+                    arrow="horizontal"
+                    onClick={() => navigation.navigate("PersonInfo")}
+                  >
+                    个人资料
+                  </Item>
+
+                  <Item
+                    arrow="horizontal"
+                    onClick={() => navigation.navigate("ChangePassword")}
+                  >
+                    修改密码
+                  </Item>
+                </List>
+                <WhiteSpace size="lg" />
+                <List>
+                  <Item arrow="horizontal" onClick={this.handleLogout}>
+                    退出登录
+                  </Item>
+                </List>
               </View>
             ) : (
               <TouchableOpacity

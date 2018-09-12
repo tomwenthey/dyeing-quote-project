@@ -1,39 +1,57 @@
-import { observable, action, decorate, flow, ObservableMap } from "mobx";
+import { observable, action, decorate, flow } from "mobx";
 
 import { FETCHING_STATE } from "../../constants";
-import { userLogin } from "../../util/api";
+import { userLogin, createUser } from "../../util/api";
 
 class UserStore {
-  loginState = "";
-  loginSuccess = false;
-  regState = "";
+  fetchState = "";
   alertMessage = "";
   user = null;
 
-  fetchLogin = flow(function*(user) {
-    this.loginState = FETCHING_STATE.PENDING;
+  clearState() {
+    this.fetchState = "";
+    this.alertMessage = "";
+  }
+
+  logout() {
+    this.clearState();
+    // AsyncStorage 中清除user信息
+    console.log("注销");
+  }
+
+  fetch = flow(function*(data, type) {
+    this.clearState();
+    this.fetchState = FETCHING_STATE.PENDING;
     try {
-      const res = yield userLogin(user);
-      const { message, status } = res.data;
-      this.loginState = FETCHING_STATE.DONE;
+      let res;
+      switch (type) {
+        case "login":
+          res = yield userLogin(data);
+          break;
+        case "reg":
+          res = yield createUser(data);
+          break;
+      }
+      const { message, status, user } = res.data;
+      this.fetchState = FETCHING_STATE.DONE;
       if (status) {
-        this.user = res.data.user;
-        this.loginSuccess = true;
+        user ? (this.user = user) : null;
+        this.fetchState = FETCHING_STATE.SUCCESS;
       }
       this.alertMessage = message;
     } catch (error) {
-      this.loginState = FETCHING_STATE.ERROR;
+      this.fetchState = FETCHING_STATE.ERROR;
       this.alertMessage = error.message;
     }
   });
 }
 
 decorate(UserStore, {
-  loginState: observable,
-  loginSuccess: observable,
-  regState: observable,
-  username: observable,
-  alertMessage: observable
+  fetchState: observable,
+  user: observable,
+  alertMessage: observable,
+  clearLoginState: action,
+  logout: action
 });
 
 export default new UserStore();
