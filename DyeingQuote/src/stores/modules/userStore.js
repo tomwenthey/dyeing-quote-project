@@ -1,7 +1,12 @@
 import { observable, action, decorate, flow } from "mobx";
 
 import { FETCHING_STATE } from "../../constants";
-import { userLogin, createUser } from "../../util/api";
+import {
+  userLogin,
+  createUser,
+  resetPassword,
+  savePersonInfo
+} from "../../util/api";
 
 class UserStore {
   fetchState = "";
@@ -15,12 +20,12 @@ class UserStore {
 
   logout() {
     this.clearState();
+    this.user = null;
     // AsyncStorage 中清除user信息
     console.log("注销");
   }
 
   fetch = flow(function*(data, type) {
-    this.clearState();
     this.fetchState = FETCHING_STATE.PENDING;
     try {
       let res;
@@ -31,10 +36,17 @@ class UserStore {
         case "reg":
           res = yield createUser(data);
           break;
+        case "password_reset":
+          res = yield resetPassword({ id: this.user._id, ...data });
+          break;
+        case "person_info":
+          res = yield savePersonInfo({ id: this.user._id, ...data });
+          break;
       }
       const { message, status, user } = res.data;
       this.fetchState = FETCHING_STATE.DONE;
       if (status) {
+        console.log(res.data);
         user ? (this.user = user) : null;
         this.fetchState = FETCHING_STATE.SUCCESS;
       }
@@ -50,7 +62,7 @@ decorate(UserStore, {
   fetchState: observable,
   user: observable,
   alertMessage: observable,
-  clearLoginState: action,
+  clearState: action,
   logout: action
 });
 

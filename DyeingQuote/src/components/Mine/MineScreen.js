@@ -19,7 +19,7 @@ const MineScreen = inject("userStore")(
         const { userStore, navigation } = this.props;
         return (
           <View style={styles.mineScreen}>
-            {userStore.fetchState === FETCHING_STATE.SUCCESS ? (
+            {userStore.user ? (
               <View>
                 <View style={styles.personInfo}>
                   <Image
@@ -48,7 +48,7 @@ const MineScreen = inject("userStore")(
 
                   <Item
                     arrow="horizontal"
-                    onClick={() => navigation.navigate("ChangePassword")}
+                    onClick={() => navigation.navigate("ResetPassword")}
                   >
                     修改密码
                   </Item>

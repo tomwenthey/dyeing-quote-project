@@ -38,9 +38,9 @@ const RegScreen = inject("userStore")(
         }
       };
 
-      handleSubmit = () => {
-        this.props.userStore.fetch(this.state, "reg");
-        this.props.userStore.clearState();
+      handleSubmit = async () => {
+        await this.props.userStore.fetch(this.state, "reg");
+        await this.props.userStore.clearState();
       };
 
       handleConfirm = () => {

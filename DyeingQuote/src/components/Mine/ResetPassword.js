@@ -13,9 +13,9 @@ import { autorun } from "mobx";
 
 import { FETCHING_STATE } from "../../constants";
 
-const ChangePassword = inject("userStore")(
+const ResetPassword = inject("userStore")(
   observer(
-    class ChangePassword extends Component {
+    class ResetPassword extends Component {
       constructor(props) {
         super(props);
         this.state = {
@@ -25,7 +25,7 @@ const ChangePassword = inject("userStore")(
       }
 
       static navigationOptions = {
-        title: "",
+        title: "修改密码",
         headerStyle: {
           backgroundColor: "#D13F50"
         },
@@ -35,16 +35,18 @@ const ChangePassword = inject("userStore")(
         }
       };
 
-      handleSubmit = () => {
-        this.props.userStore.fetch(this.state, "changePassword");
-        this.props.userStore.clearState();
+      handleSubmit = async () => {
+        await this.props.userStore.fetch(this.state, "password_reset");
+        await this.props.userStore.clearState();
       };
 
       handleConfirm = () => {
-        if (this.state.oldPassword && this.state.newPassword) {
-          this.handleSubmit();
-        } else {
+        if (this.state.oldPassword === this.state.newPassword) {
+          Toast.fail("新密码与原密码不能相同", 1);
+        } else if (!this.state.oldPassword || !this.state.newPassword) {
           Toast.fail("原密码或新密码不能为空", 1);
+        } else {
+          this.handleSubmit();
         }
       };
 
@@ -81,7 +83,7 @@ const ChangePassword = inject("userStore")(
                 style={styles.inputItem}
               >
                 <Image
-                  source={require("./img/account.png")}
+                  source={require("./img/password.png")}
                   style={{ height: 25, width: 25 }}
                 />
               </InputItem>
@@ -124,4 +126,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ChangePassword;
+export default ResetPassword;

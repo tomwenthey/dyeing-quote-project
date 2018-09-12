@@ -35,9 +35,9 @@ const LoginScreen = inject("userStore")(
         }
       };
 
-      handleSubmit = () => {
-        this.props.userStore.fetch(this.state, "login");
-        this.props.userStore.clearState();
+      handleSubmit = async () => {
+        await this.props.userStore.fetch(this.state, "login");
+        await this.props.userStore.clearState();
       };
 
       handleConfirm = () => {
@@ -57,6 +57,7 @@ const LoginScreen = inject("userStore")(
             this.props.navigation.navigate("Main");
           } else if (message) {
             Toast.fail(message, 1);
+            // this.props.userStore.clearState();
           }
         });
       };

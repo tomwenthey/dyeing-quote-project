@@ -15,7 +15,8 @@ import { StatusBar } from "react-native";
 import TabBar from "./components/TabBarNavigation";
 import LoginScreen from "./components/Mine/LoginScreen";
 import RegScreen from "./components/Mine/RegScreen";
-import ChangePassword from "./components/Mine/ChangePassword";
+import ResetPassword from "./components/Mine/ResetPassword";
+import PersonInfo from "./components/Mine/PersonInfo";
 import stores from "./stores";
 
 const Navigator = createStackNavigator(
@@ -23,7 +24,8 @@ const Navigator = createStackNavigator(
     Main: { screen: TabBar },
     Login: { screen: LoginScreen },
     Reg: { screen: RegScreen },
-    ChangePassword: { screen: ChangePassword }
+    ResetPassword: { screen: ResetPassword },
+    PersonInfo: { screen: PersonInfo }
   },
 
   {
