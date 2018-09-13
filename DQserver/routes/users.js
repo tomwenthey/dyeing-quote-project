@@ -1,4 +1,5 @@
 const UserModel = require("../models/users");
+var SHA256 = require("crypto-js/sha256");
 
 const userLogin = (req, res) => {
   let rs = { status: 0 };
@@ -35,41 +36,9 @@ const getUsers = (req, res) => {
       rs.message = err.message;
     } else {
       rs.status = 1;
-      rs.data = users;
+      rs.user = users;
     }
 
-    res.json(rs);
-  });
-};
-
-const getUser = (req, res) => {
-  const { id } = req.params;
-  let rs = { status: 0 };
-
-  UserModel.findById({ _id: id }, (err, user) => {
-    if (err) {
-      rs.message = err.message;
-    } else {
-      rs.status = 1;
-      rs.data = user;
-    }
-
-    res.json(rs);
-  });
-};
-
-const updateUser = (req, res) => {
-  const { id } = req.params;
-  let rs = { status: 0 };
-  const { name, phone, email } = req.body;
-
-  UserModel.updateOne({ _id: id }, { name, phone, email }, err => {
-    if (err) {
-      rs.message = err.message;
-    } else {
-      rs.status = 1;
-      rs.message = "更新成功";
-    }
     res.json(rs);
   });
 };
@@ -84,17 +53,92 @@ const createUser = (req, res) => {
         if (err) {
           res.json({ status: 0, message: err.message });
         }
-
-        res.json({ status: 1, message: "注册成功" });
+        console.log(UserEntity);
+        res.json({ status: 1, message: "注册成功", user: UserEntity });
       });
     }
+  });
+};
+
+const resetPassword = (req, res) => {
+  const { id, oldPassword, newPassword } = req.body;
+  let rs = { status: 0 };
+  UserModel.findOne({ _id: id }, (err, row) => {
+    if (row) {
+      if (row.comparePassword(oldPassword)) {
+        UserModel.updateOne(
+          { _id: id },
+          { password: SHA256(newPassword).toString() },
+          err => {
+            if (err) {
+              rs.message = err.message;
+            } else {
+              rs.status = 1;
+              rs.message = "密码修改成功";
+            }
+            res.json(rs);
+          }
+        );
+      } else {
+        rs.message = "旧密码输入有误";
+        res.json(rs);
+      }
+    } else {
+      rs.message = "error";
+      res.json(rs);
+    }
+  });
+};
+
+const updateUser = (req, res) => {
+  const { id } = req.params;
+  const { phone, email, introduce } = req.body;
+  let rs = { status: 0 };
+  UserModel.findOne({ _id: id }, (err, user) => {
+    if (user) {
+      UserModel.updateOne(
+        { _id: id },
+        { phone, email, introduce },
+        (err, row) => {
+          if (err) {
+            rs.message = err.message;
+            res.json(rs);
+          } else {
+            rs.status = 1;
+            rs.user = Object.assign(user, { phone, email, introduce });
+            rs.message = "个人资料修改成功";
+          }
+          res.json(rs);
+        }
+      );
+    } else {
+      rs.message = "error";
+      res.json(rs);
+    }
+  });
+};
+
+const getUser = (req, res) => {
+  const { id } = req.params;
+  let rs = { status: 0 };
+
+  UserModel.findById({ _id: id }, (err, user) => {
+    if (err) {
+      rs.message = err.message;
+    } else {
+      rs.status = 1;
+      rs.user = user;
+    }
+
+    res.json(rs);
   });
 };
 
 module.exports = {
   userLogin,
   getUsers,
-  getUser,
+  createUser,
+  resetPassword,
   updateUser,
-  createUser
+  getUser
 };

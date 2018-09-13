@@ -50,8 +50,10 @@ app
 
 app.post("/users/login", users.userLogin);
 
+app.post("/users/password_reset", users.resetPassword);
+
 app
-  .route("/users/:id")
+  .route("/user/:id")
   .get(users.getUser)
   .post(users.updateUser);
 
