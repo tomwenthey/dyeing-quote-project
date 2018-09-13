@@ -5,7 +5,8 @@ import {
   userLogin,
   createUser,
   resetPassword,
-  savePersonInfo
+  savePersonInfo,
+  getPersonInfo
 } from "../../util/api";
 
 class UserStore {
@@ -40,13 +41,15 @@ class UserStore {
           res = yield resetPassword({ id: this.user._id, ...data });
           break;
         case "person_info":
-          res = yield savePersonInfo({ id: this.user._id, ...data });
+          res = yield savePersonInfo(this.user._id, data);
+          break;
+        case "get_person_info":
+          res = yield getPersonInfo(this.user._id);
           break;
       }
       const { message, status, user } = res.data;
       this.fetchState = FETCHING_STATE.DONE;
       if (status) {
-        console.log(res.data);
         user ? (this.user = user) : null;
         this.fetchState = FETCHING_STATE.SUCCESS;
       }

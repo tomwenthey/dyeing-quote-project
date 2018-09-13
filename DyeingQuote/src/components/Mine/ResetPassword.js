@@ -50,21 +50,6 @@ const ResetPassword = inject("userStore")(
         }
       };
 
-      componentDidMount = () => {
-        autorun(() => {
-          if (this.props.userStore.fetchState === FETCHING_STATE.DONE) {
-            if (this.props.userStore.fetchSuccess) {
-              Toast.success(this.props.userStore.alertMessage, 1);
-              this.props.navigation.navigate("Main");
-            } else if (this.props.userStore.alertMessage) {
-              Toast.fail(this.props.userStore.alertMessage, 1);
-            }
-          } else if (this.props.userStore.loginState === FETCHING_STATE.ERROR) {
-            Toast.fail(this.props.userStore.alertMessage, 1);
-          }
-        });
-      };
-
       render() {
         return (
           <View style={{ flex: 1 }}>

@@ -1,17 +1,7 @@
 import React, { Component } from "react";
 import { View, Image, StyleSheet } from "react-native";
-import {
-  Button,
-  InputItem,
-  List,
-  WingBlank,
-  WhiteSpace,
-  Toast
-} from "antd-mobile-rn";
+import { Button, InputItem, List, WingBlank, WhiteSpace } from "antd-mobile-rn";
 import { observer, inject } from "mobx-react";
-import { autorun } from "mobx";
-
-import { FETCHING_STATE } from "../../constants";
 
 const PersonInfo = inject("userStore")(
   observer(
@@ -19,9 +9,9 @@ const PersonInfo = inject("userStore")(
       constructor(props) {
         super(props);
         this.state = {
-          phone: "",
-          email: "",
-          introduce: ""
+          phone: props.userStore.user.phone,
+          email: props.userStore.user.email,
+          introduce: props.userStore.user.introduce
         };
       }
 
@@ -41,22 +31,8 @@ const PersonInfo = inject("userStore")(
         await this.props.userStore.clearState();
       };
 
-      componentDidMount = () => {
-        autorun(() => {
-          if (this.props.userStore.fetchState === FETCHING_STATE.DONE) {
-            if (this.props.userStore.fetchSuccess) {
-              Toast.success(this.props.userStore.alertMessage, 1);
-              this.props.navigation.navigate("Main");
-            } else if (this.props.userStore.alertMessage) {
-              Toast.fail(this.props.userStore.alertMessage, 1);
-            }
-          } else if (this.props.userStore.loginState === FETCHING_STATE.ERROR) {
-            Toast.fail(this.props.userStore.alertMessage, 1);
-          }
-        });
-      };
-
       render() {
+        const { user } = this.props.userStore;
         return (
           <View style={{ flex: 1 }}>
             <List renderHeader={() => "完善个人信息"}>
@@ -64,6 +40,7 @@ const PersonInfo = inject("userStore")(
                 clear
                 type="phone"
                 value={this.state.phone}
+                defaultValue={user ? user.phone : null}
                 onChange={value => {
                   this.setState({
                     phone: value
@@ -82,6 +59,7 @@ const PersonInfo = inject("userStore")(
                 clear
                 type="text"
                 value={this.state.email}
+                defaultValue={user ? user.email : null}
                 onChange={value => {
                   this.setState({
                     email: value
@@ -100,6 +78,7 @@ const PersonInfo = inject("userStore")(
                 clear
                 type="text"
                 value={this.state.introduce}
+                defaultValue={user ? user.introduce : null}
                 onChange={value => {
                   this.setState({
                     introduce: value

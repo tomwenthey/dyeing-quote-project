@@ -5,10 +5,10 @@ export const base = "http://localhost:4000";
 
 // all user api in one place
 export const userApi = {
+  user: "/user/",
   users: "/users/",
   login: "/users/login/",
-  resetPassword: "/users/password_reset/",
-  savePersonInfo: "/users/person_info/"
+  resetPassword: "/users/password_reset/"
 };
 
 export function userLogin(data) {
@@ -23,6 +23,10 @@ export function resetPassword(data) {
   return axios.post(base + userApi.resetPassword, data);
 }
 
-export function savePersonInfo(data) {
-  return axios.post(base + userApi.savePersonInfo, data);
+export function savePersonInfo(id, data) {
+  return axios.post(base + userApi.user + id, data);
+}
+
+export function getPersonInfo(id) {
+  return axios.get(base + userApi.user + id);
 }

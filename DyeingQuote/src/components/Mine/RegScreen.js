@@ -9,9 +9,6 @@ import {
   Toast
 } from "antd-mobile-rn";
 import { observer, inject } from "mobx-react";
-import { autorun } from "mobx";
-
-import { FETCHING_STATE } from "../../constants";
 
 const RegScreen = inject("userStore")(
   observer(
@@ -49,18 +46,6 @@ const RegScreen = inject("userStore")(
         } else {
           Toast.fail("用户名或密码不能为空", 1);
         }
-      };
-
-      componentDidMount = () => {
-        autorun(() => {
-          const fetchState = this.props.userStore.fetchState;
-          if (fetchState === FETCHING_STATE.SUCCESS) {
-            Toast.success(this.props.userStore.alertMessage, 1);
-            this.props.navigation.navigate("Main");
-          } else {
-            Toast.fail(this.props.userStore.alertMessage, 1);
-          }
-        });
       };
 
       render() {

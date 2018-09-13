@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { List, WhiteSpace, Toast } from "antd-mobile-rn";
 import { observer, inject } from "mobx-react";
+import { autorun } from "mobx";
 
 import { FETCHING_STATE } from "../../constants";
 
@@ -10,6 +11,19 @@ const Item = List.Item;
 const MineScreen = inject("userStore")(
   observer(
     class MineScreen extends Component {
+      componentDidMount = () => {
+        autorun(() => {
+          const fetchState = this.props.userStore.fetchState;
+          const message = this.props.userStore.alertMessage;
+          if (fetchState === FETCHING_STATE.SUCCESS && message) {
+            Toast.success(message, 1);
+            this.props.navigation.navigate("Main");
+          } else if (message) {
+            Toast.fail(message, 1);
+          }
+        });
+      };
+
       handleLogout = () => {
         this.props.userStore.logout();
         Toast.success("注销成功", 1);
@@ -41,7 +55,11 @@ const MineScreen = inject("userStore")(
                 <List>
                   <Item
                     arrow="horizontal"
-                    onClick={() => navigation.navigate("PersonInfo")}
+                    onClick={async () => {
+                      await userStore.fetch(null, "get_person_info");
+                      await userStore.clearState();
+                      navigation.navigate("PersonInfo");
+                    }}
                   >
                     个人资料
                   </Item>
