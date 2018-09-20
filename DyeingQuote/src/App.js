@@ -17,6 +17,7 @@ import LoginScreen from "./components/Mine/LoginScreen";
 import RegScreen from "./components/Mine/RegScreen";
 import ResetPassword from "./components/Mine/ResetPassword";
 import PersonInfo from "./components/Mine/PersonInfo";
+import ArticleScreen from "./components/News/ArticleScreen";
 import stores from "./stores";
 
 const Navigator = createStackNavigator(
@@ -25,7 +26,8 @@ const Navigator = createStackNavigator(
     Login: { screen: LoginScreen },
     Reg: { screen: RegScreen },
     ResetPassword: { screen: ResetPassword },
-    PersonInfo: { screen: PersonInfo }
+    PersonInfo: { screen: PersonInfo },
+    Article: { screen: ArticleScreen }
   },
 
   {

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { ScrollView, StyleSheet } from "react-native";
-import { Carousel } from "antd-mobile-rn";
 
 import ArticleItem from "./ArticleItem";
 
@@ -8,15 +7,14 @@ export default class NewsScreen extends Component {
   render() {
     return (
       <ScrollView style={styles.NewsScreen}>
-        <ArticleItem>aa</ArticleItem>
-        <ArticleItem>aa</ArticleItem>
-        <ArticleItem>aa</ArticleItem>
-        <ArticleItem>aa</ArticleItem>
-        <ArticleItem>aa</ArticleItem>
-        <ArticleItem>aa</ArticleItem>
-        <ArticleItem>aa</ArticleItem>
-        <ArticleItem>aa</ArticleItem>
-        <ArticleItem>aa</ArticleItem>
+        <ArticleItem navigation={this.props.navigation}>aa</ArticleItem>
+        <ArticleItem navigation={this.props.navigation}>aa</ArticleItem>
+        <ArticleItem navigation={this.props.navigation}>aa</ArticleItem>
+        <ArticleItem navigation={this.props.navigation}>aa</ArticleItem>
+        <ArticleItem navigation={this.props.navigation}>aa</ArticleItem>
+        <ArticleItem navigation={this.props.navigation}>aa</ArticleItem>
+        <ArticleItem navigation={this.props.navigation}>aa</ArticleItem>
+        <ArticleItem navigation={this.props.navigation}>aa</ArticleItem>
       </ScrollView>
     );
   }

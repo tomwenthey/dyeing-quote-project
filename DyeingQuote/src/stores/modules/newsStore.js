@@ -3,10 +3,18 @@ import { FETCHING_STATE } from "../../constants";
 
 class NewsStore {
   news = [];
+
+  nowArticle = {
+    title: "",
+    content: "",
+    type: "",
+    time: ""
+  };
 }
 
 decorate(NewsStore, {
-  news: observable
+  news: observable,
+  nowArticle: observable
 });
 
 export default NewsStore;

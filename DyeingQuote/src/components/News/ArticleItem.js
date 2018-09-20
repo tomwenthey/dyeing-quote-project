@@ -1,10 +1,15 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-export default class ArticleItem extends Component {
+const ArticleItem = class ArticleItem extends Component {
   render() {
+    const { navigation } = this.props;
     return (
-      <View style={styles.articleWrapper}>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => navigation.navigate("Article")}
+        style={styles.articleWrapper}
+      >
         <View>
           <Text style={styles.articleTitle}>什么是磨毛面料，你真的知道么</Text>
         </View>
@@ -14,10 +19,10 @@ export default class ArticleItem extends Component {
           </View>
           <Text style={styles.articleTime}>发布于 2018-7-19 18:36</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
-}
+};
 
 const styles = StyleSheet.create({
   articleWrapper: {
@@ -54,3 +59,5 @@ const styles = StyleSheet.create({
     borderRadius: 4
   }
 });
+
+export default ArticleItem;
