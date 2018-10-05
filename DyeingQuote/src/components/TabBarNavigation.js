@@ -29,7 +29,7 @@ const TabBarNavigation = inject("globalStore")(
           <TabBar
             unselectedTintColor="#949494"
             tintColor="#D13F50"
-            barTintColor="#ffffff"
+            unselectedTintColor="#777"
           >
             <TabBar.Item
               title="首页"
@@ -57,7 +57,7 @@ const TabBarNavigation = inject("globalStore")(
             </TabBar.Item>
             <TabBar.Item
               icon={require("./img/YUAN.png")}
-              selectedIcon={require("./img/YUAN-circle-fill.png")}
+              selectedIcon={require("./img/YUAN-fill.png")}
               title="报价"
               selected={globalStore.nowTab === 2}
               onPress={() => {
@@ -69,7 +69,7 @@ const TabBarNavigation = inject("globalStore")(
             </TabBar.Item>
             <TabBar.Item
               icon={require("./img/user.png")}
-              selectedIcon={require("./img/user.png")}
+              selectedIcon={require("./img/user-fill.png")}
               title="我的"
               selected={globalStore.nowTab === 3}
               onPress={() => {
