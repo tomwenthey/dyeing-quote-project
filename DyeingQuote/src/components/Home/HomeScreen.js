@@ -20,36 +20,36 @@ const carouselData = [
 ];
 
 const latestNews = [
-  { 
-    title: "公司面料产品设计再获佳绩", 
-    time: "2018-09-13", 
-    content: "", 
-    img: require("./img/latest1.jpg") 
+  {
+    title: "公司面料产品设计再获佳绩",
+    time: "2018-09-13",
+    content: "",
+    img: require("./img/latest1.jpg")
   },
-  { 
-    title: "双重预防体系建设验收评审组走进公司", 
-    time: "2018-09-13", 
-    content: "", 
-    img: require("./img/latest2.jpg") 
+  {
+    title: "双重预防体系建设验收评审组走进公司",
+    time: "2018-09-13",
+    content: "",
+    img: require("./img/latest2.jpg")
   },
-  { 
-    title: "内外合力助推公司稳健发展", 
-    time: "2018-09-06", 
-    content: "", 
-    img: require("./img/latest3.jpg") 
+  {
+    title: "内外合力助推公司稳健发展",
+    time: "2018-09-06",
+    content: "",
+    img: require("./img/latest3.jpg")
   },
-  { 
-    title: "市“质量月”活动启动仪式在公司召开", 
-    time: "2018-09-06", 
-    content: "", 
-    img: require("./img/latest4.jpg") 
+  {
+    title: "市“质量月”活动启动仪式在公司召开",
+    time: "2018-09-06",
+    content: "",
+    img: require("./img/latest4.jpg")
   },
-  { 
-    title: "省总来滨调研齐鲁工匠工作 公司做专题汇报", 
-    time: "2018-09-06", 
-    content: "", 
-    img: require("./img/latest5.jpg") 
-  },
+  {
+    title: "省总来滨调研齐鲁工匠工作 公司做专题汇报",
+    time: "2018-09-06",
+    content: "",
+    img: require("./img/latest5.jpg")
+  }
 ];
 
 const dyeingWorks = [
@@ -134,37 +134,37 @@ export default class HomeScreen extends Component {
             <List>
               {latestNews.map((item, index) => (
                 <ListItem
-                wrap
-                extra={
-                  <Image
-                    source={item.img}
-                    style={{ width: 120, height: 80 }}
-                  />
-                }
-                style={styles.latestNews}
-                key={`latest${index}`}
-              >
-                {item.title}
-                <WhiteSpace />
-                <ListBrief>{item.time}</ListBrief>
-              </ListItem>
+                  wrap
+                  extra={
+                    <Image
+                      source={item.img}
+                      style={{ width: 120, height: 80 }}
+                    />
+                  }
+                  onClick={() => this.props.navigation.navigate("Latest")}
+                  style={styles.latestNews}
+                  key={`latest${index}`}
+                >
+                  {item.title}
+                  <WhiteSpace />
+                  <ListBrief>{item.time}</ListBrief>
+                </ListItem>
               ))}
             </List>
           </View>
-          <WhiteSpace size="lg" />
+           <WhiteSpace size="lg" />
           <View>
             <View style={styles.titleWrapper}>
-              <Text style={styles.title}>产品展示</Text>
+              <Text style={styles.title}>印染风采</Text>
             </View>
             <WhiteSpace />
             <Grid
               data={dyeingWorks}
-              columnNum={2}
+              columnNum={1}
               isCarousel
-              carouselMaxRow={2}
-              itemStyle={{ height: 150 }}
+              carouselMaxRow={1}
               renderItem={(el, index) => (
-                <Image source={el.img} style={{ height: 150 }} />
+                <Image source={el.img} style={{ width: screenWidth }} />
               )}
               onClick={(el, index) => console.log(el.explain, index)}
             />

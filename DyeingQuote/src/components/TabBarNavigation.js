@@ -70,7 +70,7 @@ const TabBarNavigation = inject("globalStore")(
             <TabBar.Item
               icon={require("./img/user.png")}
               selectedIcon={require("./img/user.png")}
-              title="My"
+              title="我的"
               selected={globalStore.nowTab === 3}
               onPress={() => {
                 globalStore.changeTab(3);

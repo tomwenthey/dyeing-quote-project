@@ -18,6 +18,7 @@ import RegScreen from "./components/Mine/RegScreen";
 import ResetPassword from "./components/Mine/ResetPassword";
 import PersonInfo from "./components/Mine/PersonInfo";
 import ArticleScreen from "./components/News/ArticleScreen";
+import LatestScreen from "./components/Home/LatestScreem";
 import stores from "./stores";
 
 const Navigator = createStackNavigator(
@@ -27,7 +28,8 @@ const Navigator = createStackNavigator(
     Reg: { screen: RegScreen },
     ResetPassword: { screen: ResetPassword },
     PersonInfo: { screen: PersonInfo },
-    Article: { screen: ArticleScreen }
+    Article: { screen: ArticleScreen },
+    Latest: { screen: LatestScreen }
   },
 
   {

@@ -63,10 +63,11 @@ const ArticleScreen = class ArticleScreen extends Component {
 const styles = {
   articleWrapper: {
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
+    backgroundColor: "#ffffff"
   },
   articleTitle: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "700"
   },
   articleInfo: {
@@ -74,7 +75,7 @@ const styles = {
     color: "#777777"
   },
   articleContent: {
-    fontSize: 16,
+    fontSize: 18,
     lineHeight: 20
   }
 };
