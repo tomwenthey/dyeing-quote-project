@@ -19,6 +19,7 @@ import ResetPassword from "./components/Mine/ResetPassword";
 import PersonInfo from "./components/Mine/PersonInfo";
 import ArticleScreen from "./components/News/ArticleScreen";
 import LatestScreen from "./components/Home/LatestScreem";
+import IMScreen from "./components/Quote/IMScreen";
 import stores from "./stores";
 
 const Navigator = createStackNavigator(
@@ -29,7 +30,8 @@ const Navigator = createStackNavigator(
     ResetPassword: { screen: ResetPassword },
     PersonInfo: { screen: PersonInfo },
     Article: { screen: ArticleScreen },
-    Latest: { screen: LatestScreen }
+    Latest: { screen: LatestScreen },
+    IMScreen: { screen: IMScreen }
   },
 
   {

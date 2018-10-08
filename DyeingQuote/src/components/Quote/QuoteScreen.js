@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { WhiteSpace, WingBlank, Button } from "antd-mobile-rn";
 export default class QuoteScreen extends Component {
   render() {
+    const { navigation } = this.props;
     return (
       <ScrollView>
         <WhiteSpace />
@@ -12,7 +13,10 @@ export default class QuoteScreen extends Component {
           </View>
           <WingBlank>
             <WhiteSpace size="lg" />
-            <Button type="warning" onPressIn={this.handleConfirm}>
+            <Button
+              type="warning"
+              onPressIn={() => navigation.navigate("IMScreen")}
+            >
               立即咨询
             </Button>
           </WingBlank>
@@ -33,7 +37,7 @@ export default class QuoteScreen extends Component {
   }
 }
 
-const styles = {
+const styles = StyleSheet.create({
   titleWrapper: {
     borderLeftColor: "#CF4747",
     borderLeftWidth: 5,
@@ -55,4 +59,4 @@ const styles = {
     color: "#777",
     fontSize: 16
   }
-};
+});
