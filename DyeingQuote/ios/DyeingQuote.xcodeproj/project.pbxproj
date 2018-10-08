@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -36,6 +37,7 @@
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* DyeingQuoteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* DyeingQuoteTests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
+		3DBE56FF02AC40F28A611E91 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DA9CB4AD3374F56A49177CB /* libRNFS.a */; };
 		51182A9DA325490BA4461FC1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 418F8E22C4AA4D919E8A22A9 /* SystemConfiguration.framework */; };
 		5AED9E5B0C974EE18F113A10 /* libAuroraIMUI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C143B45746424A2AB7720AF3 /* libAuroraIMUI.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
@@ -51,7 +53,6 @@
 		E2699159216A358400FEA172 /* RCTAuroraIMUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2699155216A351A00FEA172 /* RCTAuroraIMUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E29AA519213E7EAC003DB02C /* anticon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E29AA518213E7EAC003DB02C /* anticon.ttf */; };
 		F8B5987AF8804DC7B75F6D91 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C25380DEBFAF47E2896D8971 /* CoreTelephony.framework */; };
-		3DBE56FF02AC40F28A611E91 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DA9CB4AD3374F56A49177CB /* libRNFS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -363,6 +364,20 @@
 			remoteGlobalIDString = 3C86DF451ADF2C930047B81A;
 			remoteInfo = RCTWebSocket;
 		};
+		E2FBEF14216AE533001A5FA1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5EBCA87696074B1BBBCE0FEE /* RNFS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F12AFB9B1ADAF8F800E0535D;
+			remoteInfo = RNFS;
+		};
+		E2FBEF16216AE533001A5FA1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5EBCA87696074B1BBBCE0FEE /* RNFS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6456441F1EB8DA9100672408;
+			remoteInfo = "RNFS-tvOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -406,8 +421,10 @@
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		418F8E22C4AA4D919E8A22A9 /* SystemConfiguration.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
+		5EBCA87696074B1BBBCE0FEE /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		9DA9CB4AD3374F56A49177CB /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
 		A20E3DA95A0B415EBDE8BC5F /* CoreFoundation.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		A57CFB791029410F84FF15CB /* CoreGraphics.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
@@ -419,8 +436,6 @@
 		DB7789D01BEA4CA8AADF2192 /* CFNetwork.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		DDE5EE7E5046438FB9107C79 /* Foundation.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E29AA518213E7EAC003DB02C /* anticon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = anticon.ttf; sourceTree = "<group>"; };
-		5EBCA87696074B1BBBCE0FEE /* RNFS.xcodeproj */ = {isa = PBXFileReference; name = "RNFS.xcodeproj"; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		9DA9CB4AD3374F56A49177CB /* libRNFS.a */ = {isa = PBXFileReference; name = "libRNFS.a"; path = "libRNFS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -713,6 +728,7 @@
 				C143B45746424A2AB7720AF3 /* libAuroraIMUI.a */,
 				CA0504EFC8AD4630BB2C891E /* RCTAuroraIMUI.framework */,
 				057AE0F0F1CB49A58FB49E2B /* RCTAuroraIMUITests.xctest */,
+				9DA9CB4AD3374F56A49177CB /* libRNFS.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -723,6 +739,15 @@
 				E2699153216A351A00FEA172 /* libAuroraIMUI.a */,
 				E2699155216A351A00FEA172 /* RCTAuroraIMUI.framework */,
 				E2699157216A351A00FEA172 /* RCTAuroraIMUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E2FBEF10216AE533001A5FA1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E2FBEF15216AE533001A5FA1 /* libRNFS.a */,
+				E2FBEF17216AE533001A5FA1 /* libRNFS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -892,6 +917,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = E2FBEF10216AE533001A5FA1 /* Products */;
+					ProjectRef = 5EBCA87696074B1BBBCE0FEE /* RNFS.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1183,6 +1212,20 @@
 			fileType = wrapper.cfbundle;
 			path = RCTAuroraIMUITests.xctest;
 			remoteRef = E2699156216A351A00FEA172 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E2FBEF15216AE533001A5FA1 /* libRNFS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFS.a;
+			remoteRef = E2FBEF14216AE533001A5FA1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E2FBEF17216AE533001A5FA1 /* libRNFS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFS.a;
+			remoteRef = E2FBEF16216AE533001A5FA1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

@@ -31,16 +31,13 @@ function constructNormalMessage() {
   var date = new Date()
   message.timeString = date.getHours() + ":" + date.getMinutes()
   var user = {
-    userId: "",
+    userId: "1",
     displayName: "tom",
-    avatarPath: "images"
   }
     if (Platform.OS === "ios") {
-      console.log(RNFS.MainBundlePath);
-      user.avatarPath = RNFS.MainBundlePath + '/default_header.png'
+      user.avatarPath = RNFS.DocumentDirectoryPath + '/avatar.jpg'
     }
   message.fromUser = user
-
   return message
 }
 
@@ -50,20 +47,10 @@ var historyMessage = [
   '笨猪'
 ]
 
-// class CustomVew extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//     };
-//   }
-//   render() {
-//     return (<img src={`${RNFS.MainBundlePath}/default_header.png`}></img>)
-//   }
-// }
-
 export default class IMScreen extends Component {
 
   static navigationOptions = {
+    title: "客服"",
     headerStyle: {
       backgroundColor: "#D13F50"
     },
@@ -116,39 +103,27 @@ export default class IMScreen extends Component {
     var messages = []
     for (var index in historyMessage) {
       var message = constructNormalMessage()
-      message.fromUser.avatarUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1534926548887&di=f107f4f8bd50fada6c5770ef27535277&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F11%2F67%2F23%2F69i58PICP37.jpg",//1
       message.msgType = 'text'
       message.text = historyMessage[index]
       messages.push(message)
       // AuroraIController.appendMessages([message])
       // AuroraIController.scrollToBottom(true)
     }
+
+    message.msgType = 'text'
+    var user = {
+      userId: "2",
+      displayName: "tom1",
+    }
+      if (Platform.OS === "ios") {
+        user.avatarPath = RNFS.DocumentDirectoryPath + '/avatar.jpg'
+      }
+    message.fromUser = user
+    message.text = "test"
+    messages.push(message)
     AuroraIController.appendMessages(messages)
     AuroraIController.scrollToBottom(true)
 
-    // for (var i = 0; i < 10; i++) {
-    //   var message = constructNormalMessage()
-    //   message.msgType = 'custom'
-
-    //   if (Platform.OS === "ios") {
-    //     message.content = `
-    //     <h5>This is a custom message. </h5>
-    //     <img src="file://${RNFS.MainBundlePath}/default_header.png"/>
-    //     `
-    //   } else {
-    //     message.content = '<body bgcolor="#ff3399"><h5>This is a custom message. </h5>\
-    //     <img src="/storage/emulated/0/XhsEmoticonsKeyboard/Emoticons/wxemoticons/icon_040_cover.png"></img></body>'
-    //   }
-
-    //   var eventMessage = constructNormalMessage()
-    //   eventMessage.msgType = "event"
-    //   eventMessage.text = 'fsadfad'
-
-    //   message.contentSize = { 'height': 100, 'width': 200 }
-    //   message.extras = { "extras": "fdfsf" }
-    //   AuroraIController.appendMessages([message, eventMessage])
-    //   AuroraIController.scrollToBottom(true)
-    // }
   }
 
   onInputViewSizeChange = (size) => {
@@ -258,11 +233,6 @@ export default class IMScreen extends Component {
 
   onSendText = (text) => {
     var message = constructNormalMessage()
-    var evenmessage = constructNormalMessage()
-
-    message.msgType = 'text'
-    message.text = text
-message.fromUser.displayName = "tom"
     AuroraIController.appendMessages([message])
   }
 
@@ -408,8 +378,8 @@ message.fromUser.displayName = "tom"
           onTapMessageCell={this.onTapMessageCell}
           onBeginDragMessageList={this.onBeginDragMessageList}
           onPullToRefresh={this.onPullToRefresh}
-          avatarSize={{ width: 50, height: 50 }}
-          avatarCornerRadius={25}
+          avatarSize={{ width: 48, height: 48 }}
+          avatarCornerRadius={24}
           isShowDisplayName={true}
           messageListBackgroundColor={"#f3f3f3"}
           sendBubbleTextSize={18}
