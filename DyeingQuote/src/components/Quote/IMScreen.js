@@ -47,10 +47,11 @@ var historyMessage = [
   '笨猪'
 ]
 
+
 export default class IMScreen extends Component {
 
   static navigationOptions = {
-    title: "客服"",
+    title: "客服",
     headerStyle: {
       backgroundColor: "#D13F50"
     },
