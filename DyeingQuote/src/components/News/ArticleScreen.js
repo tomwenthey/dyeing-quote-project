@@ -56,7 +56,6 @@ const ArticleScreen = inject("newsStore")(
       }
 
       render() {
-        this.state.article ? console.log(this.state.article.content) : null;
         return this.state.article ? (
           <ScrollView style={styles.articleWrapper}>
             <WhiteSpace size="lg" />
