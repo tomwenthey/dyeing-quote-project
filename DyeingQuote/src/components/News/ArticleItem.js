@@ -1,28 +1,51 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { observer, inject } from "mobx-react";
 
-const ArticleItem = class ArticleItem extends Component {
-  render() {
-    const { navigation } = this.props;
-    return (
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={() => navigation.navigate("Article")}
-        style={styles.articleWrapper}
-      >
-        <View>
-          <Text style={styles.articleTitle}>什么是磨毛面料，你真的知道么</Text>
-        </View>
-        <View style={styles.articleInfo}>
-          <View style={styles.articleType}>
-            <Text style={{ color: "#fff", fontWeight: "700" }}>资讯</Text>
-          </View>
-          <Text style={styles.articleTime}>发布于 2018-7-19 18:36</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  }
-};
+const ArticleItem = inject("newsStore")(
+  observer(
+    class ArticleItem extends Component {
+      render() {
+        const { navigation, title, type, time, _id } = this.props;
+        let typeBgColor;
+        switch (type) {
+          case "资讯":
+            typeBgColor = "#3572A5";
+            break;
+          case "技术":
+            typeBgColor = "#FFD202";
+            break;
+          case "发展":
+            typeBgColor = "#D13F50";
+            break;
+        }
+
+        return (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              navigation.navigate("Article");
+              this.props.newsStore.changeNowArticle(_id);
+            }}
+            style={styles.articleWrapper}
+          >
+            <View>
+              <Text style={styles.articleTitle}>{title}</Text>
+            </View>
+            <View style={styles.articleInfo}>
+              <View
+                style={{ ...styles.articleType, backgroundColor: typeBgColor }}
+              >
+                <Text style={{ color: "#fff", fontWeight: "700" }}>{type}</Text>
+              </View>
+              <Text style={styles.articleTime}>发布于 {time}</Text>
+            </View>
+          </TouchableOpacity>
+        );
+      }
+    }
+  )
+);
 
 const styles = StyleSheet.create({
   articleWrapper: {
@@ -51,7 +74,6 @@ const styles = StyleSheet.create({
     marginLeft: 12
   },
   articleType: {
-    backgroundColor: "#3572A5",
     width: 50,
     height: 25,
     justifyContent: "center",

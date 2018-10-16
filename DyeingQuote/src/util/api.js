@@ -11,6 +11,11 @@ export const userApi = {
   resetPassword: "/users/password_reset/"
 };
 
+export const newsApi = {
+  articles: "/articles/",
+  article: "/article/"
+};
+
 export function userLogin(data) {
   return axios.post(base + userApi.login, data);
 }
@@ -29,4 +34,12 @@ export function savePersonInfo(id, data) {
 
 export function getPersonInfo(id) {
   return axios.get(base + userApi.user + id);
+}
+
+export function getArticles() {
+  return axios.get(base + newsApi.articles);
+}
+
+export function getArticle(id) {
+  return axios.get(base + newsApi.article + id);
 }
