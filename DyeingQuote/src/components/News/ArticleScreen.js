@@ -27,8 +27,17 @@ const ArticleScreen = inject("newsStore")(
       };
 
       getArticle = async _id => {
+        this.props.newsStore.fetchState = FETCHING_STATE.PENDING;
         await this.props.newsStore.fetchArticle(_id);
         let contentSplit = this.props.newsStore.nowArticle.content.split(" ");
+        autorun(() => {
+          const fetchState = this.props.newsStore.fetchState;
+          if (fetchState === FETCHING_STATE.ERROR) {
+            Toast.fail("获取资讯失败", 1);
+          } else if (fetchState === FETCHING_STATE.SUCCESS) {
+            Toast.hide();
+          }
+        });
         this.setState({
           article: Object.assign(
             { ...this.props.newsStore.nowArticle },
@@ -43,16 +52,6 @@ const ArticleScreen = inject("newsStore")(
 
       componentDidMount() {
         this.getArticle(this.props.newsStore.nowArticle._id);
-        autorun(() => {
-          const fetchState = this.props.newsStore.fetchState;
-          if (fetchState === FETCHING_STATE.PENDING) {
-            Toast.loading("加载中");
-          } else if (fetchState === FETCHING_STATE.ERROR) {
-            Toast.fail("获取资讯失败", 1);
-          } else if (fetchState === FETCHING_STATE.SUCCESS) {
-            Toast.hide();
-          }
-        });
       }
 
       render() {

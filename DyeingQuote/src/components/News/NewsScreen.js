@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, RefreshControl } from "react-native";
 import { observer, inject } from "mobx-react";
 import { autorun } from "mobx";
 import { Toast } from "antd-mobile-rn";
@@ -18,29 +18,38 @@ const NewsScreen = inject("newsStore")(
       }
 
       getArticles = async () => {
+        this.setState({ isRefreshing: true });
+        this.props.newsStore.fetchState = FETCHING_STATE.PENDING;
         await this.props.newsStore.fetchArticles();
+        autorun(() => {
+          const fetchState = this.props.newsStore.fetchState;
+          if (fetchState === FETCHING_STATE.ERROR) {
+            Toast.fail("获取资讯失败", 1);
+          } else if (fetchState === FETCHING_STATE.SUCCESS) {
+            Toast.hide();
+          }
+        });
+        this.setState({
+          articles: this.props.newsStore.articles,
+          isRefreshing: false
+        });
       };
 
       componentDidMount() {
         this.getArticles();
-        autorun(() => {
-          const fetchState = this.props.newsStore.fetchState;
-          if (fetchState === FETCHING_STATE.PENDING) {
-            Toast.loading("加载中");
-          } else if (fetchState === FETCHING_STATE.ERROR) {
-            Toast.fail("获取资讯失败", 1);
-          } else if (fetchState === FETCHING_STATE.SUCCESS) {
-            Toast.hide();
-            this.setState({
-              articles: this.props.newsStore.articles
-            });
-          }
-        });
       }
 
       render() {
         return (
-          <ScrollView style={styles.NewsScreen}>
+          <ScrollView
+            style={styles.NewsScreen}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.isRefreshing}
+                onRefresh={this.getArticles}
+              />
+            }
+          >
             {this.state.articles.map((item, index) => (
               <ArticleItem
                 key={index}
