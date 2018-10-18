@@ -30,7 +30,7 @@ const ArticleScreen = inject("newsStore")(
       getArticle = async _id => {
         this.props.newsStore.fetchState = FETCHING_STATE.PENDING;
         await this.props.newsStore.fetchArticle(_id);
-        let contentSplit = this.props.newsStore.nowArticle.content.split(" ");
+        let contentSplit = this.props.newsStore.nowArticle.content.split("  ");
         autorun(() => {
           const fetchState = this.props.newsStore.fetchState;
           if (fetchState === FETCHING_STATE.ERROR) {

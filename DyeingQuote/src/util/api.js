@@ -1,45 +1,34 @@
 import axios from "axios";
-
-// the base uri for request
-export const base = "http://localhost:4000";
-
-// all user api in one place
-export const userApi = {
-  user: "/user/",
-  users: "/users/",
-  login: "/users/login/",
-  resetPassword: "/users/password_reset/"
-};
-
-export const newsApi = {
-  articles: "/articles/",
-  article: "/article/"
-};
+import { BASE, userApi, newsApi } from "../constants";
 
 export function userLogin(data) {
-  return axios.post(base + userApi.login, data);
+  return axios.post(BASE + userApi.login, data);
 }
 
 export function createUser(data) {
-  return axios.post(base + userApi.users, data);
+  return axios.post(BASE + userApi.users, data);
 }
 
 export function resetPassword(data) {
-  return axios.post(base + userApi.resetPassword, data);
+  return axios.post(BASE + userApi.resetPassword, data);
 }
 
 export function savePersonInfo(id, data) {
-  return axios.post(base + userApi.user + id, data);
+  return axios.post(BASE + userApi.user + id, data);
 }
 
 export function getPersonInfo(id) {
-  return axios.get(base + userApi.user + id);
+  return axios.get(BASE + userApi.user + id);
 }
 
 export function getArticles() {
-  return axios.get(base + newsApi.articles);
+  return axios.get(BASE + newsApi.articles);
 }
 
 export function getArticle(id) {
-  return axios.get(base + newsApi.article + id);
+  return axios.get(BASE + newsApi.article + id);
+}
+
+export function getLatestNews() {
+  return axios.get(BASE + newsApi.news);
 }

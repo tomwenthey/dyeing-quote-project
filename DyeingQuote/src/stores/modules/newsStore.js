@@ -1,11 +1,13 @@
 import { observable, action, decorate, flow } from "mobx";
 import { FETCHING_STATE } from "../../constants";
 
-import { getArticles, getArticle } from "../../util/api";
+import { getArticles, getArticle, getLatestNews } from "../../util/api";
 class NewsStore {
   articles = [];
   fetchState = "";
   nowArticle = {};
+  latestNews = [];
+  nowNews = {};
 
   changeNowArticle(_id) {
     this.nowArticle._id = _id;
@@ -42,12 +44,30 @@ class NewsStore {
       this.fetchState = FETCHING_STATE.ERROR;
     }
   });
+
+  fetchLatestNews = flow(function*() {
+    this.fetchState = FETCHING_STATE.PENDING;
+    try {
+      let res;
+      res = yield getLatestNews();
+      const { status, data } = res.data;
+      this.fetchState = FETCHING_STATE.DONE;
+      if (status) {
+        data ? (this.latestNews = data) : null;
+        this.fetchState = FETCHING_STATE.SUCCESS;
+      }
+    } catch (error) {
+      this.fetchState = FETCHING_STATE.ERROR;
+    }
+  });
 }
 
 decorate(NewsStore, {
   fetchState: observable,
   news: observable,
   nowArticle: observable,
+  latestNews: observable,
+  nowNews: observable,
   changeNowArticle: action
 });
 

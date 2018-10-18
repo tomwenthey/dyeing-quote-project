@@ -8,6 +8,11 @@ import {
   ScrollView
 } from "react-native";
 import { Carousel, Grid, WhiteSpace, Card, List } from "antd-mobile-rn";
+import { observer, inject } from "mobx-react";
+import { autorun } from "mobx";
+
+import { _iso8601_to_standard_date } from "../../util/util";
+import { BASE } from "../../constants";
 
 const ListItem = List.Item;
 const ListBrief = ListItem.Brief;
@@ -17,39 +22,6 @@ const carouselData = [
   { img: require("./img/carousel2.jpg") },
   { img: require("./img/carousel3.jpg") },
   { img: require("./img/carousel4.jpg") }
-];
-
-const latestNews = [
-  {
-    title: "公司面料产品设计再获佳绩",
-    time: "2018-09-13",
-    content: "",
-    img: require("./img/latest1.jpg")
-  },
-  {
-    title: "双重预防体系建设验收评审组走进公司",
-    time: "2018-09-13",
-    content: "",
-    img: require("./img/latest2.jpg")
-  },
-  {
-    title: "内外合力助推公司稳健发展",
-    time: "2018-09-06",
-    content: "",
-    img: require("./img/latest3.jpg")
-  },
-  {
-    title: "市“质量月”活动启动仪式在公司召开",
-    time: "2018-09-06",
-    content: "",
-    img: require("./img/latest4.jpg")
-  },
-  {
-    title: "省总来滨调研齐鲁工匠工作 公司做专题汇报",
-    time: "2018-09-06",
-    content: "",
-    img: require("./img/latest5.jpg")
-  }
 ];
 
 const dyeingWorks = [
@@ -100,100 +72,130 @@ const companyIntro = [
   }
 ];
 
-export default class HomeScreen extends Component {
-  componentDidMount() {
-    this.props.navigation.setParams({ title: "首页" });
-  }
+const HomeScreen = inject("newsStore")(
+  observer(
+    class HomeScreen extends Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          latestNews: []
+        };
+      }
 
-  render() {
-    const screenWidth = Dimensions.get("window").width;
-    return (
-      <ScrollView>
-        <View style={styles.homeScreen}>
-          <Carousel
-            style={styles.carouselWrapper}
-            autoplay
-            infinite
-            dots={false}
-          >
-            {carouselData.map((item, index) => (
-              <View key={`carouse${index}`}>
-                <Image
-                  source={item.img}
-                  style={{ height: 200, width: screenWidth + 1 }}
-                />
-              </View>
-            ))}
-          </Carousel>
-          <WhiteSpace size="lg" />
-          <View>
-            <View style={styles.titleWrapper}>
-              <Text style={styles.title}>最新动态</Text>
-            </View>
-            <WhiteSpace />
-            <List>
-              {latestNews.map((item, index) => (
-                <ListItem
-                  wrap
-                  extra={
+      componentDidMount() {
+        this.props.navigation.setParams({ title: "首页" });
+        this.getLatestNews();
+      }
+
+      getLatestNews = async () => {
+        await this.props.newsStore.fetchLatestNews();
+        autorun(() => {
+          const latestNews = this.props.newsStore.latestNews;
+          this.setState({
+            latestNews: latestNews
+          });
+        });
+      };
+
+      render() {
+        const screenWidth = Dimensions.get("window").width;
+        const latestNews = this.state.latestNews;
+        return (
+          <ScrollView>
+            <View style={styles.homeScreen}>
+              <Carousel
+                style={styles.carouselWrapper}
+                autoplay
+                infinite
+                dots={false}
+              >
+                {carouselData.map((item, index) => (
+                  <View key={`carouse${index}`}>
                     <Image
                       source={item.img}
-                      style={{ width: 120, height: 80 }}
+                      style={{ height: 200, width: screenWidth + 1 }}
                     />
-                  }
-                  onClick={() => this.props.navigation.navigate("Latest")}
-                  style={styles.latestNews}
-                  key={`latest${index}`}
-                >
-                  {item.title}
-                  <WhiteSpace />
-                  <ListBrief>{item.time}</ListBrief>
-                </ListItem>
-              ))}
-            </List>
-          </View>
-           <WhiteSpace size="lg" />
-          <View>
-            <View style={styles.titleWrapper}>
-              <Text style={styles.title}>印染风采</Text>
-            </View>
-            <WhiteSpace />
-            <Grid
-              data={dyeingWorks}
-              columnNum={1}
-              isCarousel
-              carouselMaxRow={1}
-              renderItem={(el, index) => (
-                <Image source={el.img} style={{ width: screenWidth }} />
-              )}
-              onClick={(el, index) => console.log(el.explain, index)}
-            />
-          </View>
-          <WhiteSpace size="lg" />
-          <View>
-            <View style={styles.titleWrapper}>
-              <Text style={styles.title}>公司简介</Text>
-            </View>
-            <WhiteSpace />
-            {companyIntro.map((item, index) => (
-              <View key={`intro${index}`}>
-                <Card>
-                  <Card.Header title={item.title} />
-                  <Card.Body>
-                    <View>
-                      <Text style={styles.introContent}>{item.content}</Text>
-                    </View>
-                  </Card.Body>
-                </Card>
+                  </View>
+                ))}
+              </Carousel>
+              <WhiteSpace size="lg" />
+              <View>
+                <View style={styles.titleWrapper}>
+                  <Text style={styles.title}>最新动态</Text>
+                </View>
                 <WhiteSpace />
+                <List>
+                  {latestNews.map((item, index) => (
+                    <ListItem
+                      wrap
+                      extra={
+                        <Image
+                          source={{
+                            uri:
+                              BASE + (item.image.length > 0 ? item.image[0] : "image/logo.jpg")
+                          }}
+                          style={{ width: 120, height: 80 }}
+                        />
+                      }
+                      onClick={() => this.props.navigation.navigate("Latest")}
+                      style={styles.latestNews}
+                      key={`latest${index}`}
+                    >
+                      {item.title}
+                      <WhiteSpace />
+                      <ListBrief>
+                        {_iso8601_to_standard_date(item.time)}
+                      </ListBrief>
+                    </ListItem>
+                  ))}
+                </List>
               </View>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
-    );
-  }
-}
+              <WhiteSpace size="lg" />
+              <View>
+                <View style={styles.titleWrapper}>
+                  <Text style={styles.title}>印染风采</Text>
+                </View>
+                <WhiteSpace />
+                <Grid
+                  data={dyeingWorks}
+                  columnNum={1}
+                  isCarousel
+                  carouselMaxRow={1}
+                  renderItem={(el, index) => (
+                    <Image source={el.img} style={{ width: screenWidth }} />
+                  )}
+                  onClick={(el, index) => console.log(el.explain, index)}
+                />
+              </View>
+              <WhiteSpace size="lg" />
+              <View>
+                <View style={styles.titleWrapper}>
+                  <Text style={styles.title}>公司简介</Text>
+                </View>
+                <WhiteSpace />
+                {companyIntro.map((item, index) => (
+                  <View key={`intro${index}`}>
+                    <Card>
+                      <Card.Header title={item.title} />
+                      <Card.Body>
+                        <View>
+                          <Text style={styles.introContent}>
+                            {item.content}
+                          </Text>
+                        </View>
+                      </Card.Body>
+                    </Card>
+                    <WhiteSpace />
+                  </View>
+                ))}
+              </View>
+            </View>
+          </ScrollView>
+        );
+      }
+    }
+  )
+);
 
 const styles = StyleSheet.create({
   homeScreen: {
@@ -228,3 +230,5 @@ const styles = StyleSheet.create({
     paddingBottom: 10
   }
 });
+
+export default HomeScreen;
