@@ -1,9 +1,25 @@
 import React, { Component } from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
-import { WhiteSpace, WingBlank, Button } from "antd-mobile-rn";
+import { WhiteSpace, WingBlank, Button, Toast } from "antd-mobile-rn";
+
+import { _retrieveData } from "../../util/util";
 export default class QuoteScreen extends Component {
-  render() {
+  constructor(props) {
+    super(props);
+  }
+
+  handleClick = () => {
     const { navigation } = this.props;
+    _retrieveData("user").then(value => {
+      if (value) {
+        navigation.navigate("IMScreen");
+      } else {
+        Toast.fail("请先登录", 1);
+      }
+    });
+  };
+
+  render() {
     return (
       <ScrollView>
         <WhiteSpace />
@@ -13,10 +29,7 @@ export default class QuoteScreen extends Component {
           </View>
           <WingBlank>
             <WhiteSpace size="lg" />
-            <Button
-              type="warning"
-              onPressIn={() => navigation.navigate("IMScreen")}
-            >
+            <Button type="warning" onPressIn={this.handleClick}>
               立即咨询
             </Button>
           </WingBlank>

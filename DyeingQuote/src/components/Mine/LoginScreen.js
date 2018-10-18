@@ -19,7 +19,6 @@ const LoginScreen = inject("userStore")(
           username: "",
           password: ""
         };
-        console.log(props);
       }
 
       static navigationOptions = {

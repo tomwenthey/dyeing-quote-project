@@ -5,12 +5,20 @@ import { observer, inject } from "mobx-react";
 import { autorun } from "mobx";
 
 import { FETCHING_STATE } from "../../constants";
+import { _retrieveData } from "../../util/util";
 
 const Item = List.Item;
 
 const MineScreen = inject("userStore")(
   observer(
     class MineScreen extends Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          user: null
+        };
+      }
+
       componentDidMount = () => {
         autorun(() => {
           const fetchState = this.props.userStore.fetchState;
@@ -20,6 +28,21 @@ const MineScreen = inject("userStore")(
             this.props.navigation.navigate("Main");
           } else if (message) {
             Toast.fail(message, 1);
+          }
+        });
+
+        autorun(() => {
+          const user = this.props.userStore.user;
+          this.setState({
+            user: user
+          });
+        });
+
+        _retrieveData("user").then(value => {
+          if (value) {
+            this.props.userStore.setUser(JSON.parse(value));
+          } else {
+            this.setState({ user: null });
           }
         });
       };
@@ -33,7 +56,7 @@ const MineScreen = inject("userStore")(
         const { userStore, navigation } = this.props;
         return (
           <View style={styles.mineScreen}>
-            {userStore.user ? (
+            {this.state.user ? (
               <View>
                 <View style={styles.personInfo}>
                   <Image
@@ -42,7 +65,7 @@ const MineScreen = inject("userStore")(
                   />
                   <View>
                     <Text style={styles.userName}>
-                      {userStore.user.username}
+                      {this.state.user.username}
                     </Text>
                     <Text style={styles.introduce}>
                       {userStore.user.introduce

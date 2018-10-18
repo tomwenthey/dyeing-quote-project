@@ -8,6 +8,7 @@ import {
   savePersonInfo,
   getPersonInfo
 } from "../../util/api";
+import { _storeData, _removeData } from "../../util/util";
 
 class UserStore {
   fetchState = "";
@@ -21,9 +22,14 @@ class UserStore {
 
   logout() {
     this.clearState();
-    this.user = null;
     // AsyncStorage 中清除user信息
-    console.log("注销");
+    _removeData("user").then(() => {
+      this.user = null;
+    });
+  }
+
+  setUser(user) {
+    this.user = user;
   }
 
   fetch = flow(function*(data, type) {
@@ -50,7 +56,10 @@ class UserStore {
       const { message, status, user } = res.data;
       this.fetchState = FETCHING_STATE.DONE;
       if (status) {
-        user ? (this.user = user) : null;
+        if (user) {
+          this.user = user;
+          _storeData("user", JSON.stringify(user));
+        }
         this.fetchState = FETCHING_STATE.SUCCESS;
       }
       this.alertMessage = message;
@@ -66,6 +75,7 @@ decorate(UserStore, {
   user: observable,
   alertMessage: observable,
   clearState: action,
+  setUser: action,
   logout: action
 });
 
