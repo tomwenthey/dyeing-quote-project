@@ -20,12 +20,13 @@ const window = Dimensions.get("window");
 
 var themsgid = 1;
 
-function constructNormalMessage() {
+function constructNormalMessage(isOutgoing = true, msgType = "text") {
   var message = {};
   message.msgId = themsgid.toString();
   themsgid += 1;
   message.status = "send_succeed";
-  message.isOutgoing = false;
+  message.isOutgoing = isOutgoing;
+  message.msgType = msgType;
   var date = new Date();
   message.timeString = date.getHours() + ":" + date.getMinutes();
   var user = {
@@ -33,13 +34,15 @@ function constructNormalMessage() {
     displayName: "tom"
   };
   if (Platform.OS === "ios") {
-    message.isOutgoing ? user.avatarPath = RNFS.DocumentDirectoryPath + "/avatar.jpg" : user.avatarPath = RNFS.DocumentDirectoryPath + "/service.jpg"
+    message.isOutgoing
+      ? (user.avatarPath = RNFS.DocumentDirectoryPath + "/avatar.jpg")
+      : (user.avatarPath = RNFS.DocumentDirectoryPath + "/service.jpg");
   }
   message.fromUser = user;
   return message;
 }
 
-var historyMessage = ["hello", "你好"];
+var historyMessage = ["您好，请问有什么可以帮助您的？"];
 
 export default class IMScreen extends Component {
   static navigationOptions = {
@@ -89,18 +92,21 @@ export default class IMScreen extends Component {
   }
 
   messageListDidLoadEvent() {
+    var message = constructNormalMessage(true, "event");
+    message.text = "您好，客服可以为您答疑或者提供报价咨询服务~";
+    AuroraIController.appendMessages([message]);
     this.getHistoryMessage();
   }
 
   getHistoryMessage() {
     var messages = [];
     for (var index in historyMessage) {
-      var message = constructNormalMessage();
+      var message = constructNormalMessage(false);
       message.msgType = "text";
       message.text = historyMessage[index];
       messages.push(message);
-      AuroraIController.appendMessages([message])
-      AuroraIController.scrollToBottom(true)
+      AuroraIController.appendMessages([message]);
+      AuroraIController.scrollToBottom(true);
     }
   }
 

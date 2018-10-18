@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { observer, inject } from "mobx-react";
 
+import { _iso8601_to_standard_date } from "../../util/util";
+
 const ArticleItem = inject("newsStore")(
   observer(
     class ArticleItem extends Component {
@@ -38,7 +40,9 @@ const ArticleItem = inject("newsStore")(
               >
                 <Text style={{ color: "#fff", fontWeight: "700" }}>{type}</Text>
               </View>
-              <Text style={styles.articleTime}>发布于 {time}</Text>
+              <Text style={styles.articleTime}>
+                发布于 {_iso8601_to_standard_date(time)}
+              </Text>
             </View>
           </TouchableOpacity>
         );

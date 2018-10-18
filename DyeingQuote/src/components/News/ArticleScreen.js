@@ -6,6 +6,7 @@ import { autorun } from "mobx";
 import { Toast } from "antd-mobile-rn";
 
 import { FETCHING_STATE } from "../../constants";
+import { _iso8601_to_standard_date } from "../../util/util";
 
 const ArticleScreen = inject("newsStore")(
   observer(
@@ -66,7 +67,7 @@ const ArticleScreen = inject("newsStore")(
             <WhiteSpace />
             <View>
               <Text style={styles.articleInfo}>
-                发布于 {this.state.article.time}
+                发布于 {_iso8601_to_standard_date(this.state.article.time)}
               </Text>
             </View>
             <WhiteSpace size="lg" />

@@ -56,7 +56,7 @@ class UserStore {
       const { message, status, user } = res.data;
       this.fetchState = FETCHING_STATE.DONE;
       if (status) {
-        if (user) {
+        if (user && type === "login") {
           this.user = user;
           _storeData("user", JSON.stringify(user));
         }
