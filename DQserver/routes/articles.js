@@ -18,11 +18,14 @@ const getArticle = (req, res) => {
 
 const getArticles = (req, res) => {
   let rs = { status: 0 };
-  ArticleModel.find(null, null, (err, articles) => {
+  ArticleModel.find().exec((err, articles) => {
     if (err) {
       rs.message = err.message;
     } else {
       rs.status = 1;
+      articles.sort(function randomSort(a, b) {
+        return Math.random() > 0.5 ? -1 : 1;
+      });
       rs.data = articles;
     }
 

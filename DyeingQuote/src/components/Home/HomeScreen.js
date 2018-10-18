@@ -7,12 +7,12 @@ import {
   Dimensions,
   ScrollView
 } from "react-native";
-import { Carousel, Grid, WhiteSpace, Card, List } from "antd-mobile-rn";
+import { Carousel, Grid, WhiteSpace, Card, List, Toast } from "antd-mobile-rn";
 import { observer, inject } from "mobx-react";
 import { autorun } from "mobx";
 
-import { _iso8601_to_standard_date } from "../../util/util";
-import { BASE } from "../../constants";
+import { _iso8601_to_standard_date, _retrieveData } from "../../util/util";
+import { BASE, FETCHING_STATE } from "../../constants";
 
 const ListItem = List.Item;
 const ListBrief = ListItem.Brief;
@@ -91,9 +91,24 @@ const HomeScreen = inject("newsStore")(
         await this.props.newsStore.fetchLatestNews();
         autorun(() => {
           const latestNews = this.props.newsStore.latestNews;
-          this.setState({
-            latestNews: latestNews
-          });
+          latestNews != null && latestNews.length > 0
+            ? this.setState({
+                latestNews: latestNews
+              })
+            : null;
+        });
+
+        autorun(() => {
+          if (this.props.newsStore.fetchState === FETCHING_STATE.ERROR) {
+            Toast.fail("资源加载失败，请检查网络连接", 1);
+            _retrieveData("news").then(value => {
+              if (value) {
+                this.setState({
+                  latestNews: JSON.parse(value)
+                });
+              }
+            });
+          }
         });
       };
 
@@ -125,29 +140,37 @@ const HomeScreen = inject("newsStore")(
                 </View>
                 <WhiteSpace />
                 <List>
-                  {latestNews.map((item, index) => (
-                    <ListItem
-                      wrap
-                      extra={
-                        <Image
-                          source={{
-                            uri:
-                              BASE + (item.image.length > 0 ? item.image[0] : "image/logo.jpg")
+                  {latestNews && latestNews.length > 0
+                    ? latestNews.map((item, index) => (
+                        <ListItem
+                          wrap
+                          extra={
+                            <Image
+                              source={{
+                                uri:
+                                  BASE +
+                                  (item.image.length > 0
+                                    ? item.image[0]
+                                    : "image/logo.jpg")
+                              }}
+                              style={{ width: 120, height: 80 }}
+                            />
+                          }
+                          onClick={() => {
+                            this.props.navigation.navigate("Latest");
+                            this.props.newsStore.changeNowLatestNews(item._id);
                           }}
-                          style={{ width: 120, height: 80 }}
-                        />
-                      }
-                      onClick={() => this.props.navigation.navigate("Latest")}
-                      style={styles.latestNews}
-                      key={`latest${index}`}
-                    >
-                      {item.title}
-                      <WhiteSpace />
-                      <ListBrief>
-                        {_iso8601_to_standard_date(item.time)}
-                      </ListBrief>
-                    </ListItem>
-                  ))}
+                          style={styles.latestNews}
+                          key={`latest${index}`}
+                        >
+                          {item.title}
+                          <WhiteSpace />
+                          <ListBrief>
+                            {_iso8601_to_standard_date(item.time)}
+                          </ListBrief>
+                        </ListItem>
+                      ))
+                    : null}
                 </List>
               </View>
               <WhiteSpace size="lg" />

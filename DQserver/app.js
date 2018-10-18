@@ -10,6 +10,7 @@ var mongoose = require("mongoose");
 var index = require("./routes/index");
 var users = require("./routes/users");
 var articles = require("./routes/articles");
+var news = require("./routes/news");
 
 var app = express();
 
@@ -60,6 +61,9 @@ app
 
 app.get("/articles", articles.getArticles);
 app.get("/article/:id", articles.getArticle);
+
+app.get("/news", news.getLatestNews);
+app.get("/news/:id", news.getLatestNews);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

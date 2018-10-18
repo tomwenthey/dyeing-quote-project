@@ -308,7 +308,7 @@ export default class IMScreen extends Component {
           avatarCornerRadius={24}
           isShowDisplayName={false}
           messageListBackgroundColor={"#f3f3f3"}
-          sendBubbleTextSize={18}
+          sendBubbleTextSize={16}
           sendBubbleTextColor={"#000000"}
           sendBubblePadding={{ left: 10, top: 10, right: 15, bottom: 10 }}
           datePadding={{ left: 5, top: 5, right: 5, bottom: 5 }}

@@ -53,7 +53,6 @@ const createUser = (req, res) => {
         if (err) {
           res.json({ status: 0, message: err.message });
         }
-        console.log(UserEntity);
         res.json({ status: 1, message: "注册成功", user: UserEntity });
       });
     }

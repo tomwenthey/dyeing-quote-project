@@ -32,3 +32,7 @@ export function getArticle(id) {
 export function getLatestNews() {
   return axios.get(BASE + newsApi.news);
 }
+
+export function getNowLatestNews(id) {
+  return axios.get(BASE + newsApi.news + id);
+}
