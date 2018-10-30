@@ -21,7 +21,7 @@ export default class QuoteScreen extends Component {
 
   render() {
     return (
-      <ScrollView>
+      <ScrollView style={styles.quoteScreen}>
         <WhiteSpace />
         <View>
           <View style={styles.titleWrapper}>
@@ -51,6 +51,9 @@ export default class QuoteScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  quoteScreen: {
+    backgroundColor: "#eeeeee",
+  },
   titleWrapper: {
     borderLeftColor: "#CF4747",
     borderLeftWidth: 5,
