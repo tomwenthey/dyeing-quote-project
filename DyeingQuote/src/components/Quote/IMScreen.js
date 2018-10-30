@@ -11,7 +11,6 @@ import {
 
 var RNFS = require("react-native-fs");
 
-var ReactNative = require("react-native");
 import IMUI from "aurora-imui-react-native";
 var InputView = IMUI.ChatInput;
 var MessageListView = IMUI.MessageList;
