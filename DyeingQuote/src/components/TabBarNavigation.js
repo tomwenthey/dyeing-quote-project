@@ -25,6 +25,7 @@ const TabBarNavigation = inject("globalStore")(
 
       render() {
         const { globalStore, navigation } = this.props;
+
         return (
           <TabBar
             unselectedTintColor="#949494"

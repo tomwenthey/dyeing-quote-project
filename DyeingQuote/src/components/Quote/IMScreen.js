@@ -11,7 +11,11 @@ import {
 
 var RNFS = require("react-native-fs");
 
+import io from "socket.io-client";
+const socket = io('http://localhost:4000');
+
 import IMUI from "aurora-imui-react-native";
+
 var InputView = IMUI.ChatInput;
 var MessageListView = IMUI.MessageList;
 const AuroraIController = IMUI.AuroraIMUIController;
@@ -34,8 +38,8 @@ function constructNormalMessage(isOutgoing = true, msgType = "text") {
   };
   if (Platform.OS === "ios") {
     message.isOutgoing
-      ? (user.avatarPath = RNFS.DocumentDirectoryPath + "/avatar.jpg")
-      : (user.avatarPath = RNFS.DocumentDirectoryPath + "/service.jpg");
+      ? (user.avatarPath = RNFS.DocumentDirectoryPath + "/avatar.png")
+      : (user.avatarPath = RNFS.DocumentDirectoryPath + "/service.png");
   }
   message.fromUser = user;
   return message;
@@ -88,6 +92,10 @@ export default class IMScreen extends Component {
     AuroraIController.addMessageListDidLoadListener(
       this.messageListDidLoadEvent
     );
+
+    socket.on('connect', function(){  
+      console.log("send")
+    });
   }
 
   messageListDidLoadEvent() {
@@ -185,6 +193,7 @@ export default class IMScreen extends Component {
     var message = constructNormalMessage();
     message.msgType = "text";
     message.text = text;
+    socket.emit("chat", text);
     AuroraIController.appendMessages([message]);
   };
 
