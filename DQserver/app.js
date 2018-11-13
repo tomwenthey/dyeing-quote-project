@@ -83,18 +83,49 @@ app.use(function(err, req, res, next) {
   res.render("error");
 });
 
-
-
-
-
 var port = normalizePort(process.env.PORT || "4000");
 app.set("port", port);
 
 var server = http.createServer(app);
 var io = require("socket.io")(server);
+
+var userSockets = {};
+var serviceSockets = {};
+var userCountOfService = [];
+
 io.on("connection", function(socket) {
-  socket.on("chat", function(msg) {
-    console.log("收到" + msg);
+  socket.on("userToService", function(from, to, msg) {
+    if (to) {
+      var target = userSockets[from];
+      if (target) {
+        target.emit("msgFromUser", from, to, msg);
+      }
+    } else {
+      userCountOfService.sort(function(a, b) {
+        return a.userCount - b.userCount;
+      });
+      userCountOfService[0].userCount++;
+      var target = userSockets[from];
+      if (target) {
+        target.emit("msgFromUser", from, userCountOfService[0].id, msg);
+      }
+    }
+  });
+
+  socket.on("serviceToUser", function(from, to, msg) {
+    var target = userSockets[to];
+    if (target) {
+      target.emit("msgFromService", from, to, msg);
+    }
+  });
+
+  socket.on("join", function(userType, id) {
+    if (userType === 0) {
+      userSockets[id] = socket;
+    } else if (userType === 1) {
+      serviceSockets[id] = socket;
+      userCountOfService.push({ id: id, userCount: 0 });
+    }
   });
 });
 
