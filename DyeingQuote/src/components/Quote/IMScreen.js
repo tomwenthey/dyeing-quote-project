@@ -8,11 +8,14 @@ import {
   Button,
   Platform
 } from "react-native";
+import { Toast } from "antd-mobile-rn";
+
+import { _retrieveData } from "../../util/util";
 
 var RNFS = require("react-native-fs");
 
 import io from "socket.io-client";
-const socket = io('http://localhost:4000');
+const socket = io("http://localhost:4000");
 
 import IMUI from "aurora-imui-react-native";
 
@@ -45,7 +48,7 @@ function constructNormalMessage(isOutgoing = true, msgType = "text") {
   return message;
 }
 
-var historyMessage = ["您好，请问有什么可以帮助您的？"];
+var historyMessage = [];
 
 export default class IMScreen extends Component {
   static navigationOptions = {
@@ -72,8 +75,29 @@ export default class IMScreen extends Component {
       messageListLayout: { flex: 1, width: window.width, margin: 0 },
       inputViewLayout: { width: window.width, height: initHeight },
       isAllowPullToRefresh: true,
-      navigationBar: {}
+      navigationBar: {},
+      userId: "",
+      serviceId: ""
     };
+
+    _retrieveData("user").then(value => {
+      if (value) {
+        value = JSON.parse(value);
+        this.setState({ userId: value._id }, () => {
+          socket.emit("join", 0, this.state.userId);
+        });
+      } else {
+        Toast.fail("请先登录", 1);
+      }
+    });
+
+    socket.on("assignService", serviceId => {
+      if (serviceId) {
+        this.setState({serviceId: serviceId});
+      } else {
+        Toast.fail("目前暂无空闲客服，请稍后再试。", 1);
+      }
+    });
 
     this.updateLayout = this.updateLayout.bind(this);
     this.messageListDidLoadEvent = this.messageListDidLoadEvent.bind(this);
@@ -93,8 +117,8 @@ export default class IMScreen extends Component {
       this.messageListDidLoadEvent
     );
 
-    socket.on('connect', function(){  
-      console.log("send")
+    socket.on("connect", function() {
+      console.log("connect");
     });
   }
 
@@ -193,7 +217,8 @@ export default class IMScreen extends Component {
     var message = constructNormalMessage();
     message.msgType = "text";
     message.text = text;
-    socket.emit("chat", text);
+    console.log(this.state);
+    socket.emit("userToService", this.state.userId, this.state.serviceId, text);
     AuroraIController.appendMessages([message]);
   };
 
