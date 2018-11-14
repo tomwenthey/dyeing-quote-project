@@ -13,6 +13,7 @@ var index = require("./routes/index");
 var users = require("./routes/users");
 var articles = require("./routes/articles");
 var news = require("./routes/news");
+var service = require("./routes/service");
 
 var app = express();
 
@@ -67,6 +68,9 @@ app.get("/article/:id", articles.getArticle);
 app.get("/news", news.getLatestNews);
 app.get("/news/:id", news.getLatestNews);
 
+app.post("/service/login", service.serviceLogin);
+app.post("/service", service.createService);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -95,11 +99,11 @@ var userCountOfService = [];
 
 io.on("connection", function(socket) {
   socket.on("userToService", function(from, to, msg) {
-      var target = userSockets[from];
-      if (target) {
-        target.emit("msgFromUser", from, to, msg);
-      }
-      console.log(from, to, msg);
+    var target = userSockets[from];
+    if (target) {
+      target.emit("msgFromUser", from, to, msg);
+    }
+    console.log(from, to, msg);
   });
 
   socket.on("serviceToUser", function(from, to, msg) {
@@ -116,12 +120,11 @@ io.on("connection", function(socket) {
         userCountOfService.sort(function(a, b) {
           return a.userCount - b.userCount;
         });
-        userCountOfService[0].userCount ++; 
+        userCountOfService[0].userCount++;
         socket.emit("assignService", userCountOfService[0].id);
       } else {
         socket.emit("assignService", "dasdad1e21n21");
       }
-      
     } else if (userType === 1) {
       serviceSockets[id] = socket;
       userCountOfService.push({ id: id, userCount: 0 });
