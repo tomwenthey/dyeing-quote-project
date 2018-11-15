@@ -15,7 +15,11 @@ const serviceLogin = (req, res) => {
       if (user) {
         if (user.comparePassword(password)) {
           rs.status = 1;
-          rs.user = user;
+          rs.user = {
+            ...user,
+            name: "客服",
+            img: "http://localhost:4000/images/service.jpg"
+          };
           rs.message = "登录成功";
         } else {
           rs.message = "用户名或密码错误";

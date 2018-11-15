@@ -90,6 +90,7 @@ function chatIndex(state = initStates, action) {
       //   action.data.sessions.unshift(initStates.sessions[0]);
       return Object.assign({}, state, {
         ...action.data,
+        sessions: [initStates.sessions[0]],
         id_list,
         currentUserId: 1,
         currentChat: initStates.sessions[0]
@@ -97,15 +98,12 @@ function chatIndex(state = initStates, action) {
 
     case CHAT_INIT:
       var _store = JSON.parse(localStorage.getItem("_store") || "{}");
-      console.log(localStorage.getItem("_store"));
       if (!_stores.get(Storage_Key)) {
         localStorage.clear();
-        console.log(localStorage.getItem("_store"));
         return Object.assign({}, state, { ...initStates, sessions: [] });
       }
       if (_store && _store.chatIndex) {
         let { sessions, currentUserId, user, id_list } = _store.chatIndex;
-        // console.log(89,sessions);
         currentChat =
           sessions.filter(item => item.id == currentUserId)[0] || {};
         // return Object.assign({},state,{sessions,currentUserId,user,id_list,currentChat:currentChat,filterKey:""});

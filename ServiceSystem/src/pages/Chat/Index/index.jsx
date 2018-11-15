@@ -36,6 +36,7 @@ class wechat extends Component {
     let { _sessions, _user } = this.props;
     return (
       <div>
+        {console.log(_sessions, _user)}
         {_sessions.length > 0 && Object.keys(_user).length > 0 ? (
           <section className="wechat">
             <Sidebar />
