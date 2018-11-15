@@ -56,7 +56,8 @@ class Login extends Component {
         success: req => {
           this.flag = false;
         },
-        error: () => {
+        error: msg => {
+          this.setState({ error: msg });
           this.flag = false;
         }
       });
