@@ -74,6 +74,7 @@ function chatIndex(state = initStates, action) {
       }
       if (_store && _store.chatIndex) {
         let { sessions, currentUserId, user, id_list } = _store.chatIndex;
+        action.data.emit("join", 1, user.sid);
         currentChat =
           sessions.filter(item => item.id == currentUserId)[0] || {};
         // return Object.assign({},state,{sessions,currentUserId,user,id_list,currentChat:currentChat,filterKey:""});

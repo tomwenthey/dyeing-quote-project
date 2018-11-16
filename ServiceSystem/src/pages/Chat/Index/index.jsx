@@ -8,6 +8,8 @@ import React, { Component, PropTypes } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import classnames from "classnames";
+import { socketConnect } from "socket.io-react";
+
 import actions from "src/actions";
 import Sidebar from "../Sidebar/Index";
 import Messages from "../Messages/Index";
@@ -28,15 +30,14 @@ class wechat extends Component {
   }
   componentDidMount() {
     //dia(this);
-    let { ACTIONS } = this.props;
-    ACTIONS.chat_init();
+    let { ACTIONS, socket } = this.props;
+    ACTIONS.chat_init(socket);
   }
 
   render() {
     let { _sessions, _user } = this.props;
     return (
       <div>
-        {console.log(_sessions, _user)}
         {_sessions.length > 0 && Object.keys(_user).length > 0 ? (
           <section className="wechat">
             <Sidebar />
@@ -66,4 +67,4 @@ let mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(wechat);
+)(socketConnect(wechat));

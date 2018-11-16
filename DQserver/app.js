@@ -115,6 +115,7 @@ io.on("connection", function(socket) {
   });
 
   socket.on("join", function(userType, id) {
+    console.log(userType, id);
     if (userType === 0) {
       userSockets[id] = socket;
       if (userCountOfService.length > 0) {

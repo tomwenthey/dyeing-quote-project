@@ -85,37 +85,49 @@ let chat = {
   },
   send_message: options => {
     return dispatch => {
-      const { user, id, content, success, error } = options;
-      fetchJson({
-        type: "POST",
-        url: "/pushMessage?sid=" + user.sid,
-        data: {
-          sid: user.sid,
-          id: id,
-          content: content
-        },
-        success: req => {
-          if (req.res == 10000) {
-            let { data } = req;
-
-            data.unshift({
-              content: content,
-              date: Date.now(),
-              self: 1
-            });
-            dispatch({
-              type: SEND_MESSAGE,
-              data
-            });
-          } else {
-            console.log(req.errorMsg);
+      const { user, id, content, socket, success, error } = options;
+      socket.emit("serviceToUser", user.sid, id, content);
+      dispatch({
+        type: SEND_MESSAGE,
+        data: [
+          {
+            content: content,
+            date: Date.now(),
+            self: 1
           }
-          success && success(req);
-        },
-        error: () => {
-          error && error();
-        }
+        ]
       });
+      success && success();
+      // fetchJson({
+      //   type: "POST",
+      //   url: "/pushMessage?sid=" + user.sid,
+      //   data: {
+      //     sid: user.sid,
+      //     id: id,
+      //     content: content
+      //   },
+      //   success: req => {
+      //     if (req.res == 10000) {
+      //       let { data } = req;
+
+      //       data.unshift({
+      //         content: content,
+      //         date: Date.now(),
+      //         self: 1
+      //       });
+      //       dispatch({
+      //         type: SEND_MESSAGE,
+      //         data
+      //       });
+      //     } else {
+      //       console.log(req.errorMsg);
+      //     }
+      //     success && success(req);
+      //   },
+      //   error: () => {
+      //     error && error();
+      //   }
+      // });
     };
   },
   //接收消息

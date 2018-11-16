@@ -20,3 +20,7 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("app")
 );
+
+socket.on("msgFromUser", function(from, to, msg) {
+  // logic
+});
