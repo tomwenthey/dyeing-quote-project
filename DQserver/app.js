@@ -111,6 +111,7 @@ io.on("connection", function(socket) {
     if (target) {
       target.emit("msgFromService", from, to, msg);
     }
+    console.log(from, to, msg);
   });
 
   socket.on("join", function(userType, id) {

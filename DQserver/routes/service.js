@@ -16,7 +16,7 @@ const serviceLogin = (req, res) => {
         if (user.comparePassword(password)) {
           rs.status = 1;
           rs.user = {
-            ...user,
+            sid: user._id,
             name: "客服",
             img: "http://localhost:4000/images/service.jpg"
           };

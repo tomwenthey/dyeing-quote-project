@@ -15,6 +15,7 @@ import {
   SET_LOGOUT
 } from "src/constants/Chat";
 import Storage from "src/utils/storage";
+
 let _stores = new Storage(),
   Storage_Key = "username";
 
@@ -33,41 +34,9 @@ let initStates = {
       messages: [
         {
           content:
-            "该示例主要使用了react、redux、iscroll、fetch等组件实现模仿实现PC微信聊天，",
+            "华纺智能印染报价客服系统，人工客服可以通过本系统可以与用户进行交流，提供答疑、印染报价等服务。",
           date: Date.now(),
           self: 0
-        },
-        {
-          content:
-            "希望能对喜欢react,对于redux还处理迷茫，不知如何入手的小伙伴能起到入门指引",
-          date: Date.now(),
-          self: 0
-        },
-        {
-          content: "如有不足之处，欢迎拍砖指出",
-          date: Date.now(),
-          self: 0
-        },
-        {
-          content: "如果该项目帮助了您，请记得帮我点颗星，就是对我最大的支持",
-          date: Date.now(),
-          self: 0
-        },
-        {
-          content: "项目地址：https://github.com/meibin08/react-redux-chat",
-          date: Date.now(),
-          self: 1
-        },
-        {
-          content:
-            "当然如果您在使用的过程中，有不懂的地方，或更好的建议，我们也可以一起来讨论，欢迎加入React\redux技术交流群一起讨论",
-          date: Date.now(),
-          self: 0
-        },
-        {
-          content: "QQ技术交流群：386485473",
-          date: Date.now(),
-          self: 1
         }
       ]
     }
@@ -88,8 +57,9 @@ function chatIndex(state = initStates, action) {
       //   });
       //   // console.log("SEARCH_RESULT = 17",initStates);
       //   action.data.sessions.unshift(initStates.sessions[0]);
+
       return Object.assign({}, state, {
-        ...action.data,
+        user: action.data.user,
         sessions: [initStates.sessions[0]],
         id_list,
         currentUserId: 1,
