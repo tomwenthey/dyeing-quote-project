@@ -30,7 +30,7 @@ let chat = {
   },
   chatLogin: options => {
     return dispatch => {
-      const { data, success, error } = options;
+      const { data, socket, success, error } = options;
       /*ajaxJson({
 				type:"POST",
 				url:"/initSession",
@@ -61,7 +61,8 @@ let chat = {
             _store.set(Storage_Key, data.username, 120);
             dispatch({
               type: CHAT_LOGIN,
-              data: req
+              data: req,
+              socket
             });
           }
         },
@@ -85,8 +86,8 @@ let chat = {
   },
   send_message: options => {
     return dispatch => {
-      const { user, id, content, socket, success, error } = options;
-      socket.emit("serviceToUser", user.sid, id, content);
+      const { user, userId, id, content, socket, success, error } = options;
+      socket.emit("serviceToUser", user.sid, userId, content);
       dispatch({
         type: SEND_MESSAGE,
         data: [
@@ -131,32 +132,37 @@ let chat = {
     };
   },
   //接收消息
-  receive_message: options => {
-    return dispatch => {
-      const { user, id_list, success, error } = options;
-      fetchJson({
-        type: "POST",
-        url: "/getMessage?sid=" + user.sid,
-        data: {
-          id_list: id_list
-        },
-        success: req => {
-          if (req.res == 10000) {
-            let { data } = req;
-            dispatch({
-              type: RECEIVE_MESSAGE,
-              data
-            });
-          } else {
-            console.log(req.errorMsg);
-          }
-          success && success(req);
-        },
-        error: () => {
-          error && error();
-        }
-      });
+  receive_message: data => {
+    return {
+      type: RECEIVE_MESSAGE,
+      data
     };
+    // return dispatch => {
+
+    // const { user, id_list, success, error } = options;
+    // fetchJson({
+    //   type: "POST",
+    //   url: "/getMessage?sid=" + user.sid,
+    //   data: {
+    //     id_list: id_list
+    //   },
+    //   success: req => {
+    //     if (req.res == 10000) {
+    //       let { data } = req;
+    //       dispatch({
+    //         type: RECEIVE_MESSAGE,
+    //         data
+    //       });
+    //     } else {
+    //       console.log(req.errorMsg);
+    //     }
+    //     success && success(req);
+    //   },
+    //   error: () => {
+    //     error && error();
+    //   }
+    // });
+    // };
   },
   //送客
   set_destroy: options => {

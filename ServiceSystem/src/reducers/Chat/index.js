@@ -57,7 +57,7 @@ function chatIndex(state = initStates, action) {
       //   });
       //   // console.log("SEARCH_RESULT = 17",initStates);
       //   action.data.sessions.unshift(initStates.sessions[0]);
-
+      action.socket.emit("join", 1, action.data.user.sid);
       return Object.assign({}, state, {
         user: action.data.user,
         sessions: [initStates.sessions[0]],
@@ -121,28 +121,52 @@ function chatIndex(state = initStates, action) {
       });
     //接收消息
     case RECEIVE_MESSAGE:
-      // console.log("SEND_MESSAGE",action.data);
-      if (action.data.length <= 0) {
-        return state;
-      }
-      for (let key in action.data) {
-        console.log(action.data[key]);
-        let { id } = action.data[key];
-        sessions = state.sessions.map(item => {
-          if (item.id == id && item.id != state.currentUserId) {
+      console.log("SEND_MESSAGE", action.data);
+      const { userId, username } = action.data.from;
+      let tag = false;
+      sessions = state.sessions.map(item => {
+        if (item.user.name === username) {
+          item.messages = item.messages.concat({
+            content: action.data.msg,
+            self: 0,
+            date: Date.now()
+          });
+          tag = true;
+          if ( item.id !== state.currentUserId ) {
             item.status = true;
-            item.messages = item.messages.concat(action.data[key].messages);
           }
-          if (item.id == state.currentUserId) {
-            currentChat = item;
-          }
-          return item;
+        }
+        return item;
+      });
+      if (!tag) {
+        sessions.push({
+          id: sessions.length + 1,
+          user: {
+            img: "http://localhost:4000/images/user.jpg",
+            name: username,
+            id: userId
+          },
+          messages: [{ content: action.data.msg, self: 0, date: Date.now() }],
+          status: true
         });
       }
+      // for (let key in action.data) {
+      //   console.log(action.data[key]);
+      //   let { id } = action.data[key];
+      //   sessions = state.sessions.map(item => {
+      //     if (item.id == id && item.id != state.currentUserId) {
+      //       item.status = true;
+      //       item.messages = item.messages.concat(action.data[key].messages);
+      //     }
+      //     if (item.id == state.currentUserId) {
+      //       currentChat = item;
+      //     }
+      //     return item;
+      //   });
+      // }
       // (sessions.filter((item)=>item.id==state.currentUserId)[0])
       return Object.assign({}, state, {
-        sessions: sessions,
-        currentChat: currentChat
+        sessions: sessions
       });
     //	送客
     case SET_DESTROY:

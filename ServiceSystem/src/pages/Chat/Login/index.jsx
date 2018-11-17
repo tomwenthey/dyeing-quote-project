@@ -7,6 +7,7 @@
 import React, { Component, PropTypes } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { socketConnect } from "socket.io-react";
 import classnames from "classnames";
 import actions from "src/actions";
 import Sidebar from "../Sidebar/Index";
@@ -53,6 +54,7 @@ class Login extends Component {
       this.flag = true;
       ACTIONS.chatLogin({
         data: { username: name, password: password },
+        socket: this.props.socket,
         success: req => {
           this.flag = false;
         },
@@ -126,4 +128,4 @@ let mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Login);
+)(socketConnect(Login));

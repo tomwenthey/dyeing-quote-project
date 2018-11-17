@@ -32,6 +32,11 @@ class wechat extends Component {
     //dia(this);
     let { ACTIONS, socket } = this.props;
     ACTIONS.chat_init(socket);
+
+    socket.on("msgFromUser", function(from, to, msg) {
+      console.log(from);
+      ACTIONS.receive_message({ from, to, msg });
+    });
   }
 
   render() {

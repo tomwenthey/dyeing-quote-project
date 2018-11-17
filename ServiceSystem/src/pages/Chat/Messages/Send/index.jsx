@@ -1,9 +1,3 @@
-/*
- * @authors :Bin Mei
- * @date    :2017-05-22
- * @description：react-redux-chat  -> 仿微信聊天工具
- */
-
 import React, { Component, PropTypes } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -59,7 +53,7 @@ class Messages extends Component {
     return true;
   }
   save() {
-    let { ACTIONS, _user, _currentId, socket } = this.props;
+    let { ACTIONS, _user, _userId, _currentId, socket } = this.props;
     let { content } = this.state;
     if (this.flag) {
       return false;
@@ -67,6 +61,7 @@ class Messages extends Component {
     this.flag = true;
     ACTIONS.send_message({
       user: _user,
+      userId: _userId,
       id: _currentId,
       content: content,
       socket: socket,
@@ -153,11 +148,12 @@ class Messages extends Component {
 }
 
 let mapStateToProps = state => {
-  let { sessions, user, currentUserId } = state.chatIndex;
+  let { sessions, user, currentUserId, currentChat } = state.chatIndex;
   return {
     _sessions: sessions,
     _user: user,
-    _currentId: currentUserId
+    _currentId: currentUserId,
+    _userId: currentChat.user.id
   };
 };
 

@@ -99,7 +99,7 @@ var userCountOfService = [];
 
 io.on("connection", function(socket) {
   socket.on("userToService", function(from, to, msg) {
-    var target = userSockets[from];
+    var target = serviceSockets[to];
     if (target) {
       target.emit("msgFromUser", from, to, msg);
     }
@@ -114,6 +114,7 @@ io.on("connection", function(socket) {
     console.log(from, to, msg);
   });
 
+  // userType: user - 0, service - 1
   socket.on("join", function(userType, id) {
     console.log(userType, id);
     if (userType === 0) {
@@ -125,7 +126,7 @@ io.on("connection", function(socket) {
         userCountOfService[0].userCount++;
         socket.emit("assignService", userCountOfService[0].id);
       } else {
-        socket.emit("assignService", "dasdad1e21n21");
+        socket.emit("assignService", null);
       }
     } else if (userType === 1) {
       serviceSockets[id] = socket;

@@ -83,19 +83,11 @@ export default class IMScreen extends Component {
     _retrieveData("user").then(value => {
       if (value) {
         value = JSON.parse(value);
-        this.setState({ userId: value._id }, () => {
+        this.setState({ userId: value._id, username: value.username }, () => {
           socket.emit("join", 0, this.state.userId);
         });
       } else {
         Toast.fail("请先登录", 1);
-      }
-    });
-
-    socket.on("assignService", serviceId => {
-      if (serviceId) {
-        this.setState({serviceId: serviceId});
-      } else {
-        Toast.fail("目前暂无空闲客服，请稍后再试。", 1);
       }
     });
 
@@ -117,9 +109,19 @@ export default class IMScreen extends Component {
       this.messageListDidLoadEvent
     );
 
-    socket.on("connect", function() {
-      console.log("connect");
+    socket.on("assignService", serviceId => {
+      if (serviceId) {
+        this.setState({serviceId: serviceId});
+      } else {
+        Toast.fail("目前暂无空闲客服，请稍后再试。", 1);
+      }
     });
+
+    socket.on("msgFromService", (from, to, msg) => {
+      console.log(1);
+      this.onSendText(msg, false);
+    })
+
   }
 
   messageListDidLoadEvent() {
@@ -155,6 +157,9 @@ export default class IMScreen extends Component {
     AuroraIController.removeMessageListDidLoadListener(
       this.messageListDidLoadEvent
     );
+
+    socket.off("assignService");
+    socket.off("msgFromService");
   }
 
   resetMenu() {
@@ -213,12 +218,14 @@ export default class IMScreen extends Component {
     console.log("on pull to refresh");
   };
 
-  onSendText = text => {
-    var message = constructNormalMessage();
+  onSendText = (text, isOutgoing = true) => {
+    var message = constructNormalMessage(isOutgoing);
     message.msgType = "text";
     message.text = text;
-    console.log(this.state);
-    socket.emit("userToService", this.state.userId, this.state.serviceId, text);
+    const { userId, username, serviceId } = this.state;
+    if (isOutgoing) {
+      socket.emit("userToService", { userId, username }, serviceId, text);
+    }
     AuroraIController.appendMessages([message]);
   };
 

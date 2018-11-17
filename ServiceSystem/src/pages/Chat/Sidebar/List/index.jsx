@@ -24,7 +24,7 @@ class List extends Component {
     this.state = {};
   }
   componentDidMount() {
-    this.getMessage();
+    // this.getMessage();
   }
   componentWillUnmount() {
     clearInterval(this.time);
