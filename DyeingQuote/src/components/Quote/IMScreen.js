@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Toast } from "antd-mobile-rn";
 
-import { _retrieveData } from "../../util/util";
+import { _storeData, _retrieveData } from "../../util/util";
 
 var RNFS = require("react-native-fs");
 
@@ -26,15 +26,20 @@ const window = Dimensions.get("window");
 
 var themsgid = 1;
 
-function constructNormalMessage(isOutgoing = true, msgType = "text") {
+function constructNormalMessage(
+  isOutgoing = true,
+  msgType = "text",
+  date = null
+) {
   var message = {};
   message.msgId = themsgid.toString();
   themsgid += 1;
   message.status = "send_succeed";
   message.isOutgoing = isOutgoing;
   message.msgType = msgType;
-  var date = new Date();
-  message.timeString = date.getHours() + ":" + date.getMinutes();
+  let now = new Date();
+  date = date || now.toLocaleString();
+  message.timeString = date;
   var user = {
     userId: "1",
     displayName: "tom"
@@ -90,6 +95,17 @@ export default class IMScreen extends Component {
         Toast.fail("请先登录", 1);
       }
     });
+    // _storeData("history", JSON.stringify([]));
+    _retrieveData("history").then(value => {
+      if (value) {
+        value = JSON.parse(value);
+        historyMessage = value.map(item => {
+          if (item.userId === this.state.userId) {
+            return item;
+          }
+        });
+      }
+    });
 
     this.updateLayout = this.updateLayout.bind(this);
     this.messageListDidLoadEvent = this.messageListDidLoadEvent.bind(this);
@@ -111,17 +127,15 @@ export default class IMScreen extends Component {
 
     socket.on("assignService", serviceId => {
       if (serviceId) {
-        this.setState({serviceId: serviceId});
+        this.setState({ serviceId: serviceId });
       } else {
         Toast.fail("目前暂无空闲客服，请稍后再试。", 1);
       }
     });
 
     socket.on("msgFromService", (from, to, msg) => {
-      console.log(1);
       this.onSendText(msg, false);
-    })
-
+    });
   }
 
   messageListDidLoadEvent() {
@@ -134,9 +148,13 @@ export default class IMScreen extends Component {
   getHistoryMessage() {
     var messages = [];
     for (var index in historyMessage) {
-      var message = constructNormalMessage(false);
+      var message = constructNormalMessage(
+        historyMessage[index].isOutgoing,
+        "text",
+        historyMessage[index].date
+      );
       message.msgType = "text";
-      message.text = historyMessage[index];
+      message.text = historyMessage[index].message;
       messages.push(message);
       AuroraIController.appendMessages([message]);
       AuroraIController.scrollToBottom(true);
@@ -183,7 +201,6 @@ export default class IMScreen extends Component {
   };
 
   onFullScreen = () => {
-    console.log("on full screen");
     this.setState({
       messageListLayout: { flex: 0, width: 0, height: 0 },
       inputViewLayout: { flex: 1, width: window.width, height: window.height },
@@ -227,6 +244,31 @@ export default class IMScreen extends Component {
       socket.emit("userToService", { userId, username }, serviceId, text);
     }
     AuroraIController.appendMessages([message]);
+    _retrieveData("history").then(value => {
+      const date = new Date().toLocaleString();
+      if (value) {
+        value = JSON.parse(value);
+        _storeData(
+          "history",
+          JSON.stringify(
+            value.concat({
+              serviceId,
+              userId,
+              isOutgoing,
+              message: text,
+              date
+            })
+          )
+        );
+      } else {
+        _storeData(
+          "history",
+          JSON.stringify([
+            { serviceId, userId, isOutgoing, message: text, date }
+          ])
+        );
+      }
+    });
   };
 
   onTakePicture = media => {

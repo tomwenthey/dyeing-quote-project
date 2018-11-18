@@ -1,9 +1,3 @@
-/*
- * @authors :Bin Mei
- * @date    :2017-05-22
- * @description：react-redux-chat  -> 仿微信聊天工具
- */
-
 import {
   CHAT_LOGIN,
   SET_SESSION,
@@ -132,7 +126,7 @@ function chatIndex(state = initStates, action) {
             date: Date.now()
           });
           tag = true;
-          if ( item.id !== state.currentUserId ) {
+          if (item.id !== state.currentUserId) {
             item.status = true;
           }
         }
