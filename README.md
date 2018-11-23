@@ -16,6 +16,7 @@
 客服前端：
 
 - react
+- redux
 
 通过 socket.io 实现客服与用户实时通信
 
