@@ -23,3 +23,22 @@ export const newsApi = {
   article: "article/",
   news: "news/"
 };
+
+export const turingApi = "http://openapi.tuling123.com/openapi/api/v2";
+const turingtoken = "fa239baccb0c4107808c4bd0a1dccbd8";
+const turinguserid = "359345";
+
+export const turingApiCreater = (text) => {
+  return {
+    "reqType":0,
+      "perception": {
+          "inputText": {
+              "text": text
+          }
+      },
+      "userInfo": {
+          "apiKey": turingtoken,
+          "userId": turinguserid
+      }
+  }
+}

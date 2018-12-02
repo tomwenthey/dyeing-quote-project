@@ -1,6 +1,6 @@
 import React from "react";
 import { observer, inject } from "mobx-react";
-import { TabBar } from "antd-mobile-rn";
+import { TabBar, Button } from "antd-mobile-rn";
 
 import HomeScreen from "./Home/HomeScreen";
 import NewsScreen from "./News/NewsScreen";

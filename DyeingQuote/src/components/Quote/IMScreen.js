@@ -11,6 +11,7 @@ import {
 import { Toast } from "antd-mobile-rn";
 
 import { _storeData, _retrieveData } from "../../util/util";
+import { getTuringRobotReply } from "../../util/api";
 
 var RNFS = require("react-native-fs");
 
@@ -56,16 +57,26 @@ function constructNormalMessage(
 var historyMessage = [];
 
 export default class IMScreen extends Component {
-  static navigationOptions = {
-    title: "客服",
+  static navigationOptions = ({navigation}) => {
+    return {
+    title: navigation.getParam('model', '智能客服'),
     headerStyle: {
       backgroundColor: "#D13F50"
     },
     headerTintColor: "#fff",
     headerTitleStyle: {
       fontWeight: "bold"
-    }
-  };
+    },
+    headerRight: (
+      <Button
+        onPress={() => {
+          navigation.getParam('model') === "人工客服" ? navigation.setParams({model: '智能客服'}) : navigation.setParams({model: '人工客服'})
+        }}
+        title="切换客服"
+        color="#fff"
+      />  
+    ) 
+  }};
 
   constructor(props) {
     super(props);
@@ -231,17 +242,17 @@ export default class IMScreen extends Component {
     AuroraIController.hidenFeatureView(true);
   };
 
-  onPullToRefresh = () => {
-    console.log("on pull to refresh");
-  };
-
   onSendText = (text, isOutgoing = true) => {
     var message = constructNormalMessage(isOutgoing);
     message.msgType = "text";
     message.text = text;
     const { userId, username, serviceId } = this.state;
     if (isOutgoing) {
-      socket.emit("userToService", { userId, username }, serviceId, text);
+      this.props.navigation.getParam('model') === '人工客服' 
+      ? socket.emit("userToService", { userId, username }, serviceId, text) 
+      : getTuringRobotReply(text)
+      .then(res => {res.data.results[0] ? this.onSendText(res.data.results[0].values.text, false) : null})
+      .catch(err => Toast.fail(err.message, 1))
     }
     AuroraIController.appendMessages([message]);
     _retrieveData("history").then(value => {

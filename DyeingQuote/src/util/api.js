@@ -1,5 +1,11 @@
 import axios from "axios";
-import { BASE, userApi, newsApi } from "../constants";
+import {
+  BASE,
+  userApi,
+  newsApi,
+  turingApi,
+  turingApiCreater
+} from "../constants";
 
 export function userLogin(data) {
   return axios.post(BASE + userApi.login, data);
@@ -35,4 +41,8 @@ export function getLatestNews() {
 
 export function getNowLatestNews(id) {
   return axios.get(BASE + newsApi.news + id);
+}
+
+export function getTuringRobotReply(text) {
+  return axios.post(turingApi, turingApiCreater(text));
 }
