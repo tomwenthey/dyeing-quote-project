@@ -7,6 +7,7 @@
 import React, { Component, PropTypes } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { socketConnect } from "socket.io-react";
 import classnames from "classnames";
 import actions from "src/actions";
 import Scroll from "src/components/common/Scroll";
@@ -77,8 +78,10 @@ class List extends Component {
       _filterKey,
       _sessions,
       _currentId,
+      _user,
       _currentChat,
-      ACTIONS
+      ACTIONS,
+      socket
     } = this.props;
     return (
       <div className="list-wrap">
@@ -120,7 +123,7 @@ class List extends Component {
           <span
             className="ic"
             title="退出"
-            onClick={() => this.props.ACTIONS.set_logout()}
+            onClick={() => this.props.ACTIONS.set_logout(_user, socket)}
           >
             <Svg hash="#svg-exit" />
           </span>
@@ -158,4 +161,4 @@ let mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(List);
+)(socketConnect(List));

@@ -1,9 +1,3 @@
-/*
- * @authors :Bin Mei
- * @date    :2017-05-22
- * @description：react-redux-chat  -> 仿微信聊天工具
- */
-
 import { ajaxJson } from "src/utils/ajax";
 import { fetchJson } from "src/utils/fetch";
 import Storage from "src/utils/storage";
@@ -189,10 +183,13 @@ let chat = {
       });
     };
   },
-  set_logout: data => {
-    return {
-      type: SET_LOGOUT,
-      data
+  set_logout: (user, socket) => {
+    return dispatch => {
+      const { sid } = user;
+      socket.emit("serviceLogout", sid);
+      dispatch({
+        type: SET_LOGOUT
+      });
     };
   }
 };

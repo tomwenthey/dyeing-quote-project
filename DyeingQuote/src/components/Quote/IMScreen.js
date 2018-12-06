@@ -55,6 +55,7 @@ function constructNormalMessage(
 }
 
 var historyMessage = [];
+var userId;
 
 export default class IMScreen extends Component {
   static navigationOptions = ({navigation}) => {
@@ -70,7 +71,12 @@ export default class IMScreen extends Component {
     headerRight: (
       <Button
         onPress={() => {
-          navigation.getParam('model') === "人工客服" ? navigation.setParams({model: '智能客服'}) : navigation.setParams({model: '人工客服'})
+          if( navigation.getParam('model') === "人工客服" ) {
+            navigation.setParams({model: '智能客服'})
+          } else {
+            navigation.setParams({model: '人工客服'})
+            socket.emit('serviceRequest', userId);
+          }
         }}
         title="切换客服"
         color="#fff"
@@ -100,7 +106,7 @@ export default class IMScreen extends Component {
       if (value) {
         value = JSON.parse(value);
         this.setState({ userId: value._id, username: value.username }, () => {
-          socket.emit("join", 0, this.state.userId);
+          userId = value._id;
         });
       } else {
         Toast.fail("请先登录", 1);
@@ -136,7 +142,7 @@ export default class IMScreen extends Component {
       this.messageListDidLoadEvent
     );
 
-    socket.on("assignService", serviceId => {
+    socket.on("serviceResponse", serviceId => {
       if (serviceId) {
         this.setState({ serviceId: serviceId });
       } else {
@@ -158,17 +164,19 @@ export default class IMScreen extends Component {
 
   getHistoryMessage() {
     var messages = [];
-    for (var index in historyMessage) {
-      var message = constructNormalMessage(
-        historyMessage[index].isOutgoing,
-        "text",
-        historyMessage[index].date
-      );
-      message.msgType = "text";
-      message.text = historyMessage[index].message;
-      messages.push(message);
-      AuroraIController.appendMessages([message]);
-      AuroraIController.scrollToBottom(true);
+    for (var item of historyMessage) {
+      if (item) {
+        var message = constructNormalMessage(
+          item.isOutgoing,
+          "text",
+          item.date
+        );
+        message.msgType = "text";
+        message.text = item.message;
+        messages.push(message);
+        AuroraIController.appendMessages([message]);
+        AuroraIController.scrollToBottom(true);
+      }
     }
   }
 
@@ -189,6 +197,7 @@ export default class IMScreen extends Component {
 
     socket.off("assignService");
     socket.off("msgFromService");
+    socket.off("serviceResponse");
   }
 
   resetMenu() {

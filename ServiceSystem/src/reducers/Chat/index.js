@@ -51,7 +51,7 @@ function chatIndex(state = initStates, action) {
       //   });
       //   // console.log("SEARCH_RESULT = 17",initStates);
       //   action.data.sessions.unshift(initStates.sessions[0]);
-      action.socket.emit("join", 1, action.data.user.sid);
+      action.socket.emit("serviceJoin", action.data.user.sid);
       return Object.assign({}, state, {
         user: action.data.user,
         sessions: [initStates.sessions[0]],
@@ -68,7 +68,7 @@ function chatIndex(state = initStates, action) {
       }
       if (_store && _store.chatIndex) {
         let { sessions, currentUserId, user, id_list } = _store.chatIndex;
-        action.data.emit("join", 1, user.sid);
+        action.data.emit("serviceJoin", user.sid);
         currentChat =
           sessions.filter(item => item.id == currentUserId)[0] || {};
         // return Object.assign({},state,{sessions,currentUserId,user,id_list,currentChat:currentChat,filterKey:""});

@@ -95,7 +95,8 @@ var io = require("socket.io")(server);
 
 var userSockets = {};
 var serviceSockets = {};
-var userCountOfService = [];
+var userCountOfService = []; // 每个客服的当前用户数
+var serviceOfUser = {}; // 为每个用户分配的客服 userId: serviceId
 
 io.on("connection", function(socket) {
   socket.on("userToService", function(from, to, msg) {
@@ -114,26 +115,46 @@ io.on("connection", function(socket) {
     console.log(from, to, msg);
   });
 
-  // userType: user - 0, service - 1
-  socket.on("join", function(userType, id) {
-    console.log(userType, id);
-    if (userType === 0) {
-      userSockets[id] = socket;
-      if (userCountOfService.length > 0) {
-        userCountOfService.sort(function(a, b) {
-          return a.userCount - b.userCount;
-        });
-        userCountOfService[0].userCount++;
-        socket.emit("assignService", userCountOfService[0].id);
-      } else {
-        socket.emit("assignService", null);
+  socket.on("serviceJoin", function(serviceId) {
+    serviceSockets[serviceId] = socket;
+    userCountOfService.push({ id: serviceId, userCount: 0 });
+  });
+
+  socket.on("serviceRequest", function(userId) {
+    if (serviceOfUser[userId] && serviceSockets[serviceOfUser[userId]]) {
+      socket.emit("serviceResponse", serviceOfUser[userId]);
+    } else {
+      // 如果该用户没有被分配过客服或之前分配的客服不在线，则记录该用户socket，并分配客服
+      userSockets[userId] = socket;
+      socket.emit("serviceResponse", assignService(userId));
+    }
+  });
+
+  socket.on("serviceLogout", function(sid) {
+    if (sid in serviceSockets) {
+      serviceSockets[sid] = null;
+      for (let i = 0; i < userCountOfService.length; i++) {
+        if (sid === userCountOfService[i].id) {
+          userCountOfService.splice(i, 1);
+          break;
+        }
       }
-    } else if (userType === 1) {
-      serviceSockets[id] = socket;
-      userCountOfService.push({ id: id, userCount: 0 });
     }
   });
 });
+
+function assignService(userId) {
+  if (userCountOfService.length > 0) {
+    userCountOfService.sort(function(a, b) {
+      return a.userCount - b.userCount;
+    });
+    userCountOfService[0].userCount++;
+    serviceOfUser[userId] = userCountOfService[0].id;
+    return userCountOfService[0].id;
+  } else {
+    return null;
+  }
+}
 
 server.listen(port);
 server.on("error", onError);
