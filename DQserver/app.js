@@ -9,11 +9,11 @@ var mongoose = require("mongoose");
 var http = require("http");
 var debug = require("debug")("dyeing-quote-server:server");
 
-var index = require("./routes/index");
 var users = require("./routes/users");
 var articles = require("./routes/articles");
 var news = require("./routes/news");
 var service = require("./routes/service");
+var quote = require("./routes/quote");
 
 var app = express();
 
@@ -45,7 +45,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
-app.use("/", index);
 
 // user api
 app
@@ -70,6 +69,8 @@ app.get("/news/:id", news.getLatestNews);
 
 app.post("/service/login", service.serviceLogin);
 app.post("/service", service.createService);
+
+app.post("/quote", quote.isQualified);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
