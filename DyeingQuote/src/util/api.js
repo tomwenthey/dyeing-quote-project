@@ -46,3 +46,7 @@ export function getNowLatestNews(id) {
 export function getTuringRobotReply(text) {
   return axios.post(turingApi, turingApiCreater(text));
 }
+
+export function getQuoteResult(requirements) {
+  return axios.post(BASE + "quote", requirements);
+}

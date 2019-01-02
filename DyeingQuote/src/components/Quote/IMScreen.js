@@ -10,8 +10,12 @@ import {
 } from "react-native";
 import { Toast } from "antd-mobile-rn";
 
-import { _storeData, _retrieveData } from "../../util/util";
+import { _storeData, _retrieveData, handleQuote } from "../../util/util";
 import { getTuringRobotReply } from "../../util/api";
+
+import StateMachine from "javascript-state-machine";
+import { FSM_DEFINE } from "../../constants";
+let fsm = null;
 
 var RNFS = require("react-native-fs");
 
@@ -99,7 +103,8 @@ export default class IMScreen extends Component {
       isAllowPullToRefresh: true,
       navigationBar: {},
       userId: "",
-      serviceId: ""
+      serviceId: "",
+      isQuoting: false
     };
 
     _retrieveData("user").then(value => {
@@ -123,7 +128,6 @@ export default class IMScreen extends Component {
         });
       }
     });
-
     this.updateLayout = this.updateLayout.bind(this);
     this.messageListDidLoadEvent = this.messageListDidLoadEvent.bind(this);
   }
@@ -257,11 +261,29 @@ export default class IMScreen extends Component {
     message.text = text;
     const { userId, username, serviceId } = this.state;
     if (isOutgoing) {
-      this.props.navigation.getParam('model') === '人工客服' 
-      ? socket.emit("userToService", { userId, username }, serviceId, text) 
-      : getTuringRobotReply(text)
-      .then(res => {res.data.results[0] ? this.onSendText(res.data.results[0].values.text, false) : null})
-      .catch(err => Toast.fail(err.message, 1))
+      if (text === "报价") {    
+        this.setState({ isQuoting: true });
+        fsm = new StateMachine(FSM_DEFINE); 
+        setTimeout(() => {
+          this.onSendText('请填写如下报价信息，输入"quit"可以退出报价流程。', false)
+          this.onSendText("请输入需要报价的产品型号，例：HH1611801", false)
+        }, 1000);
+      } else if (text.toLowerCase() === "quit" && fsm) {
+        this.exitQuote();
+        setTimeout(() => {
+          this.onSendText('成功退出报价流程，需要报价请再输入”报价“', false)
+        }, 1000);
+      } else {
+        if (this.state.isQuoting) {
+          handleQuote(text, fsm, this);
+        } else {
+          this.props.navigation.getParam('model') === '人工客服' 
+          ? socket.emit("userToService", { userId, username }, serviceId, text) 
+          : getTuringRobotReply(text)
+          .then(res => {res.data.results[0] ? this.onSendText(res.data.results[0].values.text, false) : null})
+          .catch(err => Toast.fail(err.message, 1))
+        }
+      }
     }
     AuroraIController.appendMessages([message]);
     _retrieveData("history").then(value => {
@@ -291,108 +313,22 @@ export default class IMScreen extends Component {
     });
   };
 
-  onTakePicture = media => {
-    console.log("media " + JSON.stringify(media));
-    var message = constructNormalMessage();
-    message.msgType = "image";
-    message.mediaPath = media.mediaPath;
-    AuroraIController.appendMessages([message]);
-    this.resetMenu();
-    AuroraIController.scrollToBottom(true);
-  };
-
-  onSendGalleryFiles = mediaFiles => {
-    /**
-     * WARN: This callback will return original image,
-     * if insert it directly will high memory usage and blocking UI。
-     * You should crop the picture before insert to messageList。
-     *
-     * WARN: 这里返回的是原图，直接插入大会话列表会很大且耗内存.
-     * 应该做裁剪操作后再插入到 messageListView 中，
-     * 一般的 IM SDK 会提供裁剪操作，或者开发者手动进行裁剪。
-     *
-     * 代码用例不做裁剪操作。
-     */
-    Alert.alert("fas", JSON.stringify(mediaFiles));
-    for (index in mediaFiles) {
-      var message = constructNormalMessage();
-      if (mediaFiles[index].mediaType == "image") {
-        message.msgType = "image";
-      } else {
-        message.msgType = "video";
-        message.duration = mediaFiles[index].duration;
-      }
-
-      message.mediaPath = mediaFiles[index].mediaPath;
-      message.timeString = "8:00";
-      message.status = "send_going";
-      AuroraIController.appendMessages([message]);
-      AuroraIController.scrollToBottom(true);
-    }
-
-    this.resetMenu();
-  };
-
-  onSwitchToMicrophoneMode = () => {
-    AuroraIController.scrollToBottom(true);
-  };
-
   onSwitchToEmojiMode = () => {
     AuroraIController.scrollToBottom(true);
   };
-  onSwitchToGalleryMode = () => {
-    AuroraIController.scrollToBottom(true);
-  };
-
-  onSwitchToCameraMode = () => {
-    AuroraIController.scrollToBottom(true);
-  };
-
-  onShowKeyboard = keyboard_height => {};
 
   updateLayout(layout) {
     this.setState({ inputViewLayout: layout });
   }
 
   onInitPress() {
-    console.log("on click init push ");
     this.updateAction();
   }
 
-  onClickSelectAlbum = () => {
-    console.log("on click select album");
-  };
-
-  onCloseCamera = () => {
-    console.log("On close camera event");
-    this.setState({
-      inputLayoutHeight: 100,
-      messageListLayout: { flex: 1, width: window.width, margin: 0 },
-      inputViewLayout: { flex: 0, width: window.width, height: 100 },
-      navigationBar: { height: 64, justifyContent: "center" }
-    });
-  };
-
-  /**
-   * Switch to record video mode or not
-   */
-  switchCameraMode = isRecordVideoMode => {
-    console.log(
-      "Switching camera mode: isRecordVideoMode: " + isRecordVideoMode
-    );
-    // If record video mode, then set to full screen.
-    if (isRecordVideoMode) {
-      this.setState({
-        messageListLayout: { flex: 0, width: 0, height: 0 },
-        inputViewLayout: {
-          flex: 1,
-          width: window.width,
-          height: window.height
-        },
-        navigationBar: { height: 0 }
-      });
-    }
-  };
+  exitQuote() {
+    this.setState({ isQuoting: false });
+    fsm = null;
+  }
 
   render() {
     return (
@@ -411,6 +347,7 @@ export default class IMScreen extends Component {
           isShowDisplayName={false}
           messageListBackgroundColor={"#f3f3f3"}
           sendBubbleTextSize={16}
+          receiveBubbleTextSize={16}
           sendBubbleTextColor={"#000000"}
           sendBubblePadding={{ left: 10, top: 10, right: 15, bottom: 10 }}
           datePadding={{ left: 5, top: 5, right: 5, bottom: 5 }}
