@@ -55,24 +55,25 @@ export const FSM_DEFINE = {
     { name: "g", from: "s2", to: "s2" },
     { name: "h", from: "s3", to: "s3" }
   ],
-  data: {
-    requirements: {
-      specification: "",
-      appearance_quality: {
-        执行标准: "",
-        质量要求: ""
-      },
-      intrinsic_quality: {
-        pH值: "",
-        克重: "",
-        织物幅宽: "",
-        "（国、日标）耐洗色牢度变色/沾色": "",
-        "耐干摩/湿摩色牢度": ""
-      },
-      packaging: "",
-      remark: ""
-    },
-    lastState: ""
+  data: function() {
+    return {
+      requirements: {
+        specification: "",
+        appearance_quality: {
+          执行标准: "",
+          质量要求: ""
+        },
+        intrinsic_quality: {
+          pH值: "",
+          克重: "",
+          织物幅宽: "",
+          "（国、日标）耐洗色牢度变色/沾色": "",
+          "耐干摩/湿摩色牢度": ""
+        },
+        packaging: "",
+        remark: ""
+      }
+    };
   },
   methods: {
     onTransition: function(lifecycle, arg1) {

@@ -263,7 +263,8 @@ export default class IMScreen extends Component {
     if (isOutgoing) {
       if (text === "报价") {    
         this.setState({ isQuoting: true });
-        fsm = new StateMachine(FSM_DEFINE); 
+        fsm = new StateMachine(FSM_DEFINE);
+        console.log(fsm)
         setTimeout(() => {
           this.onSendText('请填写如下报价信息，输入"quit"可以退出报价流程。', false)
           this.onSendText("请输入需要报价的产品型号，例：HH1611801", false)
@@ -327,7 +328,8 @@ export default class IMScreen extends Component {
 
   exitQuote() {
     this.setState({ isQuoting: false });
-    fsm = null;
+    fsm = new StateMachine();
+    console.log(fsm)
   }
 
   render() {

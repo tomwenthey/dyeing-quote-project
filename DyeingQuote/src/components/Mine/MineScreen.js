@@ -37,14 +37,6 @@ const MineScreen = inject("userStore")(
             user: user
           });
         });
-
-        _retrieveData("user").then(value => {
-          if (value) {
-            this.props.userStore.setUser(JSON.parse(value));
-          } else {
-            this.setState({ user: null });
-          }
-        });
       };
 
       handleLogout = () => {

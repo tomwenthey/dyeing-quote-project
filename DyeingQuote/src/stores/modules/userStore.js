@@ -56,9 +56,10 @@ class UserStore {
       const { message, status, user } = res.data;
       this.fetchState = FETCHING_STATE.DONE;
       if (status) {
-        if (user && type === "login") {
+        if (user && (type === "login" || type === "get_person_info")) {
           this.user = user;
           _storeData("user", JSON.stringify(user));
+          console.log(user);
         }
         this.fetchState = FETCHING_STATE.SUCCESS;
       }

@@ -48,5 +48,13 @@ export function getTuringRobotReply(text) {
 }
 
 export function getQuoteResult(requirements) {
+  return axios.post(BASE + "quote/isQualified", requirements);
+}
+
+export function getQuotes(userId) {
+  return axios.get(BASE + "quotes/" + userId);
+}
+
+export function createQuote(requirements) {
   return axios.post(BASE + "quote", requirements);
 }

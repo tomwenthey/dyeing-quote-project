@@ -1,5 +1,5 @@
 import { AsyncStorage } from "react-native";
-import { getQuoteResult } from "./api";
+import { getQuoteResult, createQuote } from "./api";
 
 export const _storeData = async (key, value) => {
   try {
@@ -194,12 +194,17 @@ export const handleQuote = (text, fsm, context) => {
     case "s5":
       fsm.e();
       fsm.requirements.remark = text;
-      setTimeout(() => {
-        context.onSendText(
-          `报价需求采集完毕，您可以在历史报价信息中查看报价结果。`,
-          false
-        );
-      }, 1000);
+      createQuote({
+        userId: context.state.userId,
+        requirements: fsm.requirements
+      }).then(res => {
+        if (res.data) {
+          setTimeout(() => {
+            context.onSendText(res.data.message, false);
+          }, 1000);
+        }
+      });
+      context.exitQuote();
       break;
     case "s6":
       context.exitQuote();

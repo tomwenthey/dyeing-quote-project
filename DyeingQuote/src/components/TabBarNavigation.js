@@ -6,8 +6,9 @@ import HomeScreen from "./Home/HomeScreen";
 import NewsScreen from "./News/NewsScreen";
 import QuoteScreen from "./Quote/QuoteScreen";
 import MineScreen from "./Mine/MineScreen";
+import { _retrieveData } from "../util/util";
 
-const TabBarNavigation = inject("globalStore")(
+const TabBarNavigation = inject("globalStore", "userStore")(
   observer(
     class TabBarNavigation extends React.Component {
       static navigationOptions = ({ navigation }) => {
@@ -22,6 +23,16 @@ const TabBarNavigation = inject("globalStore")(
           }
         };
       };
+
+      componentDidMount() {
+        _retrieveData("user").then(value => {
+          if (value) {
+            this.props.userStore.setUser(JSON.parse(value));
+          } else {
+            this.setState({ user: null });
+          }
+        });
+      }
 
       render() {
         const { globalStore, navigation } = this.props;
