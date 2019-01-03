@@ -70,7 +70,14 @@ app.get("/news/:id", news.getLatestNews);
 app.post("/service/login", service.serviceLogin);
 app.post("/service", service.createService);
 
-app.post("/quote", quote.isQualified);
+app.post("/quote/isQualified", quote.isQualified);
+app.post("/quote", quote.createQuote);
+app.route("/quote/:id")
+.get(quote.getQuote)
+.post(quote.updateQuote)
+
+app.get("/quotes/:userId", quote.getQuotes)
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

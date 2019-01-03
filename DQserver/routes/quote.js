@@ -1,4 +1,5 @@
 const specification = require("../db/specifications");
+const QuoteModel = require("../models/quote");
 
 const isQualified = (req, res) => {
   const { type, inputType, input } = req.body;
@@ -10,7 +11,7 @@ const isQualified = (req, res) => {
       newInput = input.toUpperCase().replace(/ /g, "");
       let flag = 0;
       for (let i = 0; i < specification.length; i++) {
-        if (newInput.indexOf(specification[i].specificaiton) !== -1) {
+        if (newInput === specification[i].specificaiton) {
           flag = 1;
           newInput = specification[i].specificaiton;
           break;
@@ -26,7 +27,7 @@ const isQualified = (req, res) => {
           result: newInput
         };
       }
-
+      break;
     case "appearance_quality":
       rs = {
         status: 1,
@@ -46,6 +47,7 @@ const isQualified = (req, res) => {
           rs.result = input;
         }
       }
+      break;
     case "intrinsic_quality":
       if (inputType === "pH值") {
         newInput = input.split("-");
@@ -95,26 +97,31 @@ const isQualified = (req, res) => {
       ) {
         let flag = 1;
         newInput = input.split("/");
-        if (newInput[0].indexOf("-")) {
-          newInput[0] = newInput[0].split("-").map(item => parseInt(item));
-          if (newInput[0][0] <= 0 || newInput[0][0] >= newInput[0][1]) {
-            flag = 0;
+        if (newInput.length === 2) {
+          if (newInput[0].indexOf("-")) {
+            newInput[0] = newInput[0].split("-").map(item => parseInt(item));
+            if (newInput[0][0] <= 0 || newInput[0][0] >= newInput[0][1]) {
+              flag = 0;
+            }
+          } else {
+            if (parseInt(newInput[0]) <= 0) {
+              flag = 0;
+            }
+          }
+          if (newInput[1] && newInput[1].indexOf("-")) {
+            newInput[1] = newInput[1].split("-").map(item => parseInt(item));
+            if (newInput[1][0] <= 0 || newInput[1][0] >= newInput[1][1]) {
+              flag = 0;
+            }
+          } else {
+            if (parseInt(newInput[1]) <= 0) {
+              flag = 0;
+            }
           }
         } else {
-          if (parseInt(newInput[0]) <= 0) {
-            flag = 0;
-          }
+          flag = 0;
         }
-        if (newInput[1] && newInput[1].indexOf("-")) {
-          newInput[1] = newInput[1].split("-").map(item => parseInt(item));
-          if (newInput[1][0] <= 0 || newInput[1][0] >= newInput[1][1]) {
-            flag = 0;
-          }
-        } else {
-          if (parseInt(newInput[1]) <= 0) {
-            flag = 0;
-          }
-        }
+
         if (flag) {
           rs = {
             status: 1,
@@ -126,12 +133,55 @@ const isQualified = (req, res) => {
           rs.message = "请输入正确格式的耐干摩/湿摩色牢度，例：3-4级/2级";
         }
       }
+      break;
     default:
+      break;
   }
-
   res.json(rs);
 };
 
+function createQuote(req, res) {
+  const QuoteEntity = new QuoteModel(req.body);
+  QuoteEntity.save(err => {
+    if (err) {
+      res.json({ status: 0, message: err.message });
+    }
+    res.json({
+      status: 1,
+      message: "报价需求采集完毕，您可以在历史报价信息中查看报价结果。",
+      quoteId: QuoteEntity
+    });
+  });
+}
+
+function updateQuote(req, res) {
+  console.log(111);
+  res.json(req.body);
+}
+
+function getQuote(req, res) {
+  res.json(req.params);
+}
+
+function getQuotes(req, res) {
+  const { userId } = req.params;
+  let rs = { status: 0 };
+  QuoteModel.find({ userId }).sort({_id:-1}).exec((err, quotes) => {
+    if (err) {
+      rs.message = err.message;
+    } else {
+      rs.status = 1;
+      rs.data = quotes;
+    }
+
+    res.json(rs);
+  });
+}
+
 module.exports = {
-  isQualified
+  isQualified,
+  createQuote,
+  updateQuote,
+  getQuote,
+  getQuotes
 };
